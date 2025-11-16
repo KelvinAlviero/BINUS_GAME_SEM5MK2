@@ -1,0 +1,642 @@
+fileFormatVersion: 2
+guid: ed9aa2e297637274bbfe4acc145842c4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3659276979870681894
+    second: BINUS_PM_Jose-Sheet_0
+  - first:
+      213: 1376903807704266873
+    second: BINUS_PM_Jose-Sheet_1
+  - first:
+      213: 8336879092881926013
+    second: BINUS_PM_Jose-Sheet_2
+  - first:
+      213: 4986524049405381071
+    second: BINUS_PM_Jose-Sheet_3
+  - first:
+      213: -8324475966936590731
+    second: BINUS_PM_Jose-Sheet_4
+  - first:
+      213: -18533652339960766
+    second: BINUS_PM_Jose-Sheet_5
+  - first:
+      213: -134842683898556767
+    second: BINUS_PM_Jose-Sheet_6
+  - first:
+      213: -1804868121875966993
+    second: BINUS_PM_Jose-Sheet_7
+  - first:
+      213: 6219371225415802216
+    second: BINUS_PM_Jose-Sheet_8
+  - first:
+      213: 5602967970780809026
+    second: BINUS_PM_Jose-Sheet_9
+  - first:
+      213: 3105729719520809289
+    second: BINUS_PM_Jose-Sheet_10
+  - first:
+      213: 1998874625081011940
+    second: BINUS_PM_Jose-Sheet_11
+  - first:
+      213: -47035546995797401
+    second: BINUS_PM_Jose-Sheet_12
+  - first:
+      213: 2397176101642673720
+    second: BINUS_PM_Jose-Sheet_13
+  - first:
+      213: 7315149448965703070
+    second: BINUS_PM_Jose-Sheet_14
+  - first:
+      213: -7802485608986438499
+    second: BINUS_PM_Jose-Sheet_15
+  - first:
+      213: 1411856111006789408
+    second: BINUS_PM_Jose-Sheet_16
+  - first:
+      213: 2181510249833319489
+    second: BINUS_PM_Jose-Sheet_17
+  - first:
+      213: -3679853362284045856
+    second: BINUS_PM_Jose-Sheet_18
+  - first:
+      213: 5039074426077851107
+    second: BINUS_PM_Jose-Sheet_19
+  - first:
+      213: -7634541196083980483
+    second: BINUS_PM_Jose-Sheet_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 4
+        width: 142
+        height: 287
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad43b0879f2a73dc0800000000000000
+      internalID: -3659276979870681894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 4
+        width: 142
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 978781cc7bebb1310800000000000000
+      internalID: 1376903807704266873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 4
+        width: 142
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d77ab924d5b82b370800000000000000
+      internalID: 8336879092881926013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 4
+        width: 142
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc900c40431b33540800000000000000
+      internalID: 4986524049405381071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 1374
+        y: 4
+        width: 142
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 576d7798635897c80800000000000000
+      internalID: -8324475966936590731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 1694
+        y: 4
+        width: 142
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 244d2ebcdb72ebff0800000000000000
+      internalID: -18533652339960766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 2014
+        y: 4
+        width: 142
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ae8aad1b41f02ef0800000000000000
+      internalID: -134842683898556767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 2334
+        y: 4
+        width: 142
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe318297102d3f6e0800000000000000
+      internalID: -1804868121875966993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 2654
+        y: 4
+        width: 142
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86dd1398d25af4650800000000000000
+      internalID: 6219371225415802216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 2974
+        y: 4
+        width: 142
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24708420fadb1cd40800000000000000
+      internalID: 5602967970780809026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 3294
+        y: 4
+        width: 142
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 941596c99b4c91b20800000000000000
+      internalID: 3105729719520809289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 3599
+        y: 4
+        width: 162
+        height: 272
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eeee7a81ed6dbb10800000000000000
+      internalID: 1998874625081011940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 3954
+        y: 4
+        width: 127
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 762df715b65e85ff0800000000000000
+      internalID: -47035546995797401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 4274
+        y: 4
+        width: 127
+        height: 287
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83e9772b6fa744120800000000000000
+      internalID: 2397176101642673720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 4574
+        y: 4
+        width: 172
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e95ce70aaa1a48560800000000000000
+      internalID: 7315149448965703070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_15
+      rect:
+        serializedVersion: 2
+        x: 4879
+        y: 4
+        width: 162
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d94144f8da008b390800000000000000
+      internalID: -7802485608986438499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_16
+      rect:
+        serializedVersion: 2
+        x: 5234
+        y: 4
+        width: 127
+        height: 287
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02f268217abe79310800000000000000
+      internalID: 1411856111006789408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_17
+      rect:
+        serializedVersion: 2
+        x: 5524
+        y: 4
+        width: 222
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14c403b9308464e10800000000000000
+      internalID: 2181510249833319489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_18
+      rect:
+        serializedVersion: 2
+        x: 5844
+        y: 4
+        width: 147
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e9588b1dd88eecc0800000000000000
+      internalID: -3679853362284045856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_19
+      rect:
+        serializedVersion: 2
+        x: 6174
+        y: 0
+        width: 122
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ed202b0e736ee540800000000000000
+      internalID: 5039074426077851107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_Jose-Sheet_20
+      rect:
+        serializedVersion: 2
+        x: 6479
+        y: 14
+        width: 172
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3714505b39ac0690800000000000000
+      internalID: -7634541196083980483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable: {}
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
