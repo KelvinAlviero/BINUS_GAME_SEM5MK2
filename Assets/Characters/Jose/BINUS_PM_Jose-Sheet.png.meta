@@ -97,7 +97,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -132,8 +132,8 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
+    maxTextureSize: 8192
+    resizeAlgorithm: 1
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
@@ -634,7 +634,28 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BINUS_PM_Jose-Sheet_0: -3659276979870681894
+      BINUS_PM_Jose-Sheet_1: 1376903807704266873
+      BINUS_PM_Jose-Sheet_10: 3105729719520809289
+      BINUS_PM_Jose-Sheet_11: 1998874625081011940
+      BINUS_PM_Jose-Sheet_12: -47035546995797401
+      BINUS_PM_Jose-Sheet_13: 2397176101642673720
+      BINUS_PM_Jose-Sheet_14: 7315149448965703070
+      BINUS_PM_Jose-Sheet_15: -7802485608986438499
+      BINUS_PM_Jose-Sheet_16: 1411856111006789408
+      BINUS_PM_Jose-Sheet_17: 2181510249833319489
+      BINUS_PM_Jose-Sheet_18: -3679853362284045856
+      BINUS_PM_Jose-Sheet_19: 5039074426077851107
+      BINUS_PM_Jose-Sheet_2: 8336879092881926013
+      BINUS_PM_Jose-Sheet_20: -7634541196083980483
+      BINUS_PM_Jose-Sheet_3: 4986524049405381071
+      BINUS_PM_Jose-Sheet_4: -8324475966936590731
+      BINUS_PM_Jose-Sheet_5: -18533652339960766
+      BINUS_PM_Jose-Sheet_6: -134842683898556767
+      BINUS_PM_Jose-Sheet_7: -1804868121875966993
+      BINUS_PM_Jose-Sheet_8: 6219371225415802216
+      BINUS_PM_Jose-Sheet_9: 5602967970780809026
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
