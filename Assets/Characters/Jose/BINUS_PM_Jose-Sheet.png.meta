@@ -132,9 +132,9 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 8192
-    resizeAlgorithm: 1
-    textureFormat: -1
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: 4
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -163,10 +163,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_0
       rect:
         serializedVersion: 2
-        x: 94
-        y: 4
-        width: 142
-        height: 287
+        x: 0
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,10 +185,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_1
       rect:
         serializedVersion: 2
-        x: 414
-        y: 4
-        width: 142
-        height: 282
+        x: 320
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -207,10 +207,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_2
       rect:
         serializedVersion: 2
-        x: 734
-        y: 4
-        width: 142
-        height: 277
+        x: 640
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,10 +229,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_3
       rect:
         serializedVersion: 2
-        x: 1054
-        y: 4
-        width: 142
-        height: 262
+        x: 960
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -251,10 +251,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_4
       rect:
         serializedVersion: 2
-        x: 1374
-        y: 4
-        width: 142
-        height: 262
+        x: 1280
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -273,10 +273,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_5
       rect:
         serializedVersion: 2
-        x: 1694
-        y: 4
-        width: 142
-        height: 262
+        x: 1600
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -295,10 +295,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_6
       rect:
         serializedVersion: 2
-        x: 2014
-        y: 4
-        width: 142
-        height: 262
+        x: 1920
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -317,10 +317,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_7
       rect:
         serializedVersion: 2
-        x: 2334
-        y: 4
-        width: 142
-        height: 262
+        x: 2240
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,10 +339,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_8
       rect:
         serializedVersion: 2
-        x: 2654
-        y: 4
-        width: 142
-        height: 262
+        x: 2560
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -361,10 +361,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_9
       rect:
         serializedVersion: 2
-        x: 2974
-        y: 4
-        width: 142
-        height: 277
+        x: 2880
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -383,10 +383,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_10
       rect:
         serializedVersion: 2
-        x: 3294
-        y: 4
-        width: 142
-        height: 282
+        x: 3200
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -405,10 +405,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_11
       rect:
         serializedVersion: 2
-        x: 3599
-        y: 4
-        width: 162
-        height: 272
+        x: 3520
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -427,10 +427,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_12
       rect:
         serializedVersion: 2
-        x: 3954
-        y: 4
-        width: 127
-        height: 282
+        x: 3840
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -449,10 +449,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_13
       rect:
         serializedVersion: 2
-        x: 4274
-        y: 4
-        width: 127
-        height: 287
+        x: 4160
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -471,10 +471,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_14
       rect:
         serializedVersion: 2
-        x: 4574
-        y: 4
-        width: 172
-        height: 277
+        x: 4480
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -493,10 +493,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_15
       rect:
         serializedVersion: 2
-        x: 4879
-        y: 4
-        width: 162
-        height: 282
+        x: 4800
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -515,10 +515,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_16
       rect:
         serializedVersion: 2
-        x: 5234
-        y: 4
-        width: 127
-        height: 287
+        x: 5120
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -537,10 +537,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_17
       rect:
         serializedVersion: 2
-        x: 5524
-        y: 4
-        width: 222
-        height: 282
+        x: 5440
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -559,10 +559,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_18
       rect:
         serializedVersion: 2
-        x: 5844
-        y: 4
-        width: 147
-        height: 282
+        x: 5760
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -581,10 +581,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_19
       rect:
         serializedVersion: 2
-        x: 6174
+        x: 6080
         y: 0
-        width: 122
-        height: 291
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -603,10 +603,10 @@ TextureImporter:
       name: BINUS_PM_Jose-Sheet_20
       rect:
         serializedVersion: 2
-        x: 6479
-        y: 14
-        width: 172
-        height: 277
+        x: 6400
+        y: 0
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -625,7 +625,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 41bab40893cb874419408310bdd460fc
     internalID: 0
     vertices: []
     indices: 
