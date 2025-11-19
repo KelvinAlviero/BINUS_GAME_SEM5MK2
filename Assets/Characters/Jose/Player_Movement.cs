@@ -1,34 +1,54 @@
 using UnityEngine;
 
-
-public class Player_Movement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    [Header("Movement Settings")]
+    public float moveSpeed = 8f;
+    public float jumpForce = 20f;
 
-    public float speed;
+    [Header("Ground Detection")]
+    public Transform groundCheck; // Drag an empty child object here
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer; // Set this to 'Ground' in Inspector
 
-    public Rigidbody2D body; //How it works, {accesibility, component, inputted name}
+    private Rigidbody2D rb;
+    private float horizontalInput;
+    private bool isGrounded;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
-    void Update()   {
-        float xInput = Input.GetAxis("Horizontal"); //Gets X axis input
-        float yInput = Input.GetAxis("Vertical"); //Gets Y axis input
-        
-        // if (Mathf.Abs(xInput) > 0) {
-        //     body.linearVelocity = new Vector2(xInput*speed, body.linearvelocity.y);
-        // }
+    void Update()
+    {
+        // 1. Capture Input
+        horizontalInput = Input.GetAxisRaw("Horizontal"); // Returns -1, 0, or 1
 
-        // if (Mathf.Abs(xInput) > 0) {
-        //     body.linearVelocity = new Vector2(body.linearvelocity.x, yInput*speed);//NOTE, IF VELOCITY DOESN'T WORK, USE "linearVelocity", new API lolololol
-        // }
-        Vector2 direction = new Vector2(xInput, yInput).normalized; //Normalized is to set X and Y speed the same
-        body.linearVelocity = direction * speed; 
+        // 2. Check for Jump
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+    }
 
+    void FixedUpdate()
+    {
+        // 3. Check if on Ground
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
+        // 4. Move the Character
+        // We keep the current Y velocity to not interfere with gravity
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+    }
+
+    // Optional: Draw the ground check circle in the editor for debugging
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
     }
 }
