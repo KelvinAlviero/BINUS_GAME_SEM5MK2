@@ -718,6 +718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 1.93
   attackDamage: 1
+  animator: {fileID: 990139480}
   attackRate: 2
   attackPoint: {fileID: 1305750984}
   enemyLayer:
