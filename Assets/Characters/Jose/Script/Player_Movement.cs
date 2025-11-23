@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class Player_Movement : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float moveSpeed = 8f;
@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashingPower = 14f;
     [SerializeField] private float dashingTime = 0.5f;
     [SerializeField] private float dashingCooldown = 1f;
+    
     private Vector2 dashingDirection;
     private bool isDashing;
     private bool canDash = true;
@@ -23,8 +24,11 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private float horizontalInput;
+    private float yVelocity;
     private bool isGrounded;
     private bool isFacingRight = true;
+    
+    [SerializeField] private Animator animator;
 
     void Awake()
     {
@@ -50,8 +54,21 @@ public class PlayerController : MonoBehaviour
         }
 
         FlipCharacter();
-    }
 
+        //Animation - Walking
+        animator.SetBool("IsWalking", horizontalInput != 0);
+        
+        //Animation - Jump
+        if (!isGrounded)
+        {
+            animator.SetBool("IsJumping",true);
+            animator.SetFloat("yVelocity", rb.linearVelocity.y);
+        }
+        else
+        {
+            animator.SetBool("IsJumping", false);
+        }
+    }
     void FixedUpdate()
     {
         if (isDashing) return;
