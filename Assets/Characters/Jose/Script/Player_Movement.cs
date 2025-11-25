@@ -5,14 +5,16 @@ using UnityEngine;
 public class Player_Movement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 8f;
+    public float walkSpeed = 8f;
     public float jumpForce = 20f;
+    [SerializeField] private float jumpCost = 20f;
 
     [Header("Dashing Settings")]
     [SerializeField] private float dashingPower = 14f;
     [SerializeField] private float dashingTime = 0.5f;
     [SerializeField] private float dashingCooldown = 1f;
-    
+    [SerializeField] private float dashCost = 40f;
+
     private Vector2 dashingDirection;
     private bool isDashing;
     private bool canDash = true;
@@ -23,6 +25,7 @@ public class Player_Movement : MonoBehaviour
     public LayerMask groundLayer; // Set this to 'Ground' in Inspector
 
     private Rigidbody2D rb;
+    private Player_Stats stats;
     private float horizontalInput;
     private float yVelocity;
     private bool isGrounded;
@@ -33,6 +36,7 @@ public class Player_Movement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        stats = GetComponent<Player_Stats>();
     }
 
     void Update()
@@ -41,17 +45,20 @@ public class Player_Movement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal"); // Returns -1, 0, or 1
 
         // 2. Check for Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && stats.CanSpendStamina(jumpCost))
         {
+            stats.DrainStamina(jumpCost);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
 
         // 3. Check for dashing
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        if (Input.GetMouseButtonDown(1) && canDash && stats.CanSpendStamina(dashCost))
         {
+            stats.DrainStamina(dashCost);
             StartCoroutine(Dashing());
         }
+        
 
         FlipCharacter();
 
@@ -71,15 +78,15 @@ public class Player_Movement : MonoBehaviour
     }
     void FixedUpdate()
     {
+       
         if (isDashing) return;
-
 
         // 3. Check if on Ground
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         // 4. Move the Character
         // We keep the current Y velocity to not interfere with gravity
-        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(horizontalInput * walkSpeed, rb.linearVelocity.y);
     }
 
     private void FlipCharacter()

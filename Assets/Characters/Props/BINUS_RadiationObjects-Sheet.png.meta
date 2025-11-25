@@ -184,7 +184,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BINUS_RadiationObjects-Sheet_0: -526384543006114198
+      BINUS_RadiationObjects-Sheet_1: -8180866145677254963
+      BINUS_RadiationObjects-Sheet_2: -4493187469004127981
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
