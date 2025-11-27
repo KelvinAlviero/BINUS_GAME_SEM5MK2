@@ -41,52 +41,44 @@ public class Player_Movement : MonoBehaviour
 
     void Update()
     {
-        // 1. Capture Input
-        horizontalInput = Input.GetAxisRaw("Horizontal"); // Returns -1, 0, or 1
-
-        // 2. Check for Jump
-        if (Input.GetButtonDown("Jump") && isGrounded && stats.CanSpendStamina(jumpCost))
-        {
-            stats.DrainStamina(jumpCost);
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-
-        // 3. Check for dashing
-
-        if (Input.GetMouseButtonDown(1) && canDash && stats.CanSpendStamina(dashCost))
-        {
-            stats.DrainStamina(dashCost);
-            StartCoroutine(Dashing());
-        }
-        
-
+        HandleWalkingInput();
+        HandleJumpingInput();
+        HandleDashingInput();
         FlipCharacter();
-
-        //Animation - Walking
-        animator.SetBool("IsWalking", horizontalInput != 0);
-        
-        //Animation - Jump
-        if (!isGrounded)
-        {
-            animator.SetBool("IsJumping",true);
-            animator.SetFloat("yVelocity", rb.linearVelocity.y);
-        }
-        else
-        {
-            animator.SetBool("IsJumping", false);
-        }
     }
     void FixedUpdate()
     {
        
         if (isDashing) return;
 
-        // 3. Check if on Ground
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        CheckIfPlayerGrounded();
 
+        HandlePlayerMovement();        
+    }
+
+    private void HandlePlayerMovement()
+    {
         // 4. Move the Character
         // We keep the current Y velocity to not interfere with gravity
         rb.linearVelocity = new Vector2(horizontalInput * walkSpeed, rb.linearVelocity.y);
+
+        // Animation by tracking the y velocity
+
+        animator.SetFloat("yVelocity", rb.linearVelocity.y);
+
+        if (rb.linearVelocityY < 0)
+        {
+            animator.SetBool("IsFalling", true);
+        }
+        else
+        {
+            animator.SetBool("IsFalling", false);
+        }
+    }
+
+    private void CheckIfPlayerGrounded()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
     private void FlipCharacter()
@@ -97,6 +89,41 @@ public class Player_Movement : MonoBehaviour
             isFacingRight = !isFacingRight;
             localScale.x *= -1;
             transform.localScale = localScale;
+        }
+    }
+
+    private void HandleWalkingInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal"); // Returns -1, 0, or 1
+        // Animation
+        animator.SetBool("IsWalking", horizontalInput != 0);
+    }
+
+    private void HandleJumpingInput()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded && stats.CanSpendStamina(jumpCost))
+        {
+            stats.DrainStamina(jumpCost);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+
+        // Animation
+        if (!isGrounded)
+        {
+            animator.SetBool("IsJumping", true);
+        }
+        else
+        {
+            animator.SetBool("IsJumping", false);
+        }
+    }
+
+    private void HandleDashingInput()
+    {
+        if (Input.GetMouseButtonDown(1) && canDash && stats.CanSpendStamina(dashCost))
+        {
+            stats.DrainStamina(dashCost);
+            StartCoroutine(Dashing());
         }
     }
 

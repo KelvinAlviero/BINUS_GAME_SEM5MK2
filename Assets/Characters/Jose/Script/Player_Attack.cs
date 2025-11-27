@@ -7,10 +7,10 @@ public class Player_Attack : MonoBehaviour
     [SerializeField] private float attackRange = 0.5f;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private Animator animator;
+    private bool isAttacking = false;
     public float attackRate = 2f;
     float nextAttackTime = 0f;
     public Transform attackPoint;
-    private bool LeftJose;
 
     [Header("Enemy Layer")]
     public LayerMask enemyLayer;
@@ -24,11 +24,13 @@ public class Player_Attack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LeftJose = Input.GetMouseButtonDown(0);
+        bool leftMouse = Input.GetMouseButtonDown(0);
+        isAttacking = false;
         if (Time.time >= nextAttackTime)
         {
-            if (LeftJose)
+            if (leftMouse)
             {
+                isAttacking = true;
                 Attack();
                 nextAttackTime = Time.time + 1f / attackRate;
             }
@@ -37,8 +39,6 @@ public class Player_Attack : MonoBehaviour
 
     private void Attack()
     {   
-        
-        //thank u Jose
         animator.SetTrigger("IsAttacking");
         Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector3(attackRange, 3), 0,enemyLayer);  
 
@@ -58,11 +58,13 @@ public class Player_Attack : MonoBehaviour
         
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos() 
     {
-        if (attackPoint == null) return;
-
-        Gizmos.DrawWireCube(attackPoint.position, new Vector3(attackRange, 3));
+        if (isAttacking && attackPoint != null) // Only during attack
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(attackPoint.position, new Vector3(attackRange, 3));
+        }
     }
 
 }
