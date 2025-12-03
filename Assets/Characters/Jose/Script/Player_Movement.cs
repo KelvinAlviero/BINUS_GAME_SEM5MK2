@@ -41,9 +41,6 @@ public class Player_Movement : MonoBehaviour
 
     void Update()
     {
-        HandleWalkingInput();
-        HandleJumpingInput();
-        HandleDashingInput();
         FlipCharacter();
     }
     void FixedUpdate()
@@ -92,16 +89,16 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    private void HandleWalkingInput()
+    public void TryWalkingInput(float horizontalInputFromKeyboard)
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal"); // Returns -1, 0, or 1
+        horizontalInput = horizontalInputFromKeyboard; // Returns -1, 0, or 1
         // Animation
         animator.SetBool("IsWalking", horizontalInput != 0);
     }
 
-    private void HandleJumpingInput()
+    public void TryJumpingInput()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded && stats.CanSpendStamina(jumpCost))
+        if (isGrounded && stats.CanSpendStamina(jumpCost))
         {
             stats.DrainStamina(jumpCost);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -118,7 +115,7 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    private void HandleDashingInput()
+    public void TryDashingInput()
     {
         if (Input.GetMouseButtonDown(1) && canDash && stats.CanSpendStamina(dashCost))
         {

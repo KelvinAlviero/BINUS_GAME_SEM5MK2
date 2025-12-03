@@ -4,12 +4,12 @@ using UnityEngine;
 public class Player_Attack : MonoBehaviour
 {
     [Header("Attacking System")]
+    public float attackRate = 2f;
     [SerializeField] private float attackRange = 0.5f;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private Animator animator;
     private bool isAttacking = false;
-    public float attackRate = 2f;
-    float nextAttackTime = 0f;
+    private float nextAttackTime = 0f;
     public Transform attackPoint;
 
     [Header("Enemy Layer")]
@@ -24,20 +24,21 @@ public class Player_Attack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool leftMouse = Input.GetMouseButtonDown(0);
+        
+    }
+
+    public void TryAttack()
+    {
         isAttacking = false;
         if (Time.time >= nextAttackTime)
-        {
-            if (leftMouse)
-            {
-                isAttacking = true;
-                Attack();
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
+        {            
+            isAttacking = true;
+            AttackLogic();
+            nextAttackTime = Time.time + 1f / attackRate;   
         }
     }
 
-    private void Attack()
+    private void AttackLogic()
     {   
         animator.SetTrigger("IsAttacking");
         Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector3(attackRange, 3), 0,enemyLayer);  
