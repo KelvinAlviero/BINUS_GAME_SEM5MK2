@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy_Script : MonoBehaviour
+public class Enemy_Script_A : MonoBehaviour
 {
     [Header("PlayerStats")]
     public GameObject player;
@@ -38,7 +38,7 @@ public class Enemy_Script : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Update()
+    void Update()
     {
         if (Time.time >= nextAttackTime)
         {
@@ -55,15 +55,6 @@ public class Enemy_Script : MonoBehaviour
             }
 
         }
-    }
-    
-    public void MoveEnemy(float direction) // -1 for Left, 1 for Right
-    {
-        Vector3 moveVelocity = new Vector3(direction * enemyWalkSpeed, 0, 0);
-        transform.position += moveVelocity * Time.deltaTime;
-    
-        // Handle flipping based on direction
-        LookAtPlayer(); 
     }
 
     private void DealShootDamage()
@@ -83,6 +74,13 @@ public class Enemy_Script : MonoBehaviour
     private void DealMeleeDamage(float meleeDamage)
     {
         MeleeDamageCollider(meleeDamage);
+        timesAttack++;
+
+        // After attacking 3 times enemy go into range mode
+        if (timesAttack > 2)
+        {
+            enemyRangeAmmo = 3;
+        }
     }
 
     private void MeleeDamageCollider(float meleeDamage)
@@ -125,8 +123,6 @@ public class Enemy_Script : MonoBehaviour
             isFlipped = true;
         }
     }
-
-    
 
 
     //Debugging
