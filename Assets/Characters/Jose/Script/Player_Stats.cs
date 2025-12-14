@@ -120,11 +120,14 @@ public class Player_Stats : MonoBehaviour
         if (CheckIfBlocking())
         {
             AudioManager.instance.PlaySoundFXClipWithRandomPitch(blockSoundEffect, transform, 0.5f);
+            DataLogger.Instance.LogPlayerDamage(damage, true);
             return;
         }
 
         Hitstop.instance.Stop(0.1f);
         AudioManager.instance.PlaySoundFXClipWithRandomPitch(hurtSoundEffect, transform, 0.5f);
+        DataLogger.Instance.LogPlayerDamage(damage, false);
+        
         playerCurrentHealth -= damage;
         playerMaxStaminaValue -= damage; // Using the setter to update max stamina
 
@@ -135,6 +138,7 @@ public class Player_Stats : MonoBehaviour
 
         if (playerCurrentHealth <= 0)
         {
+            DataLogger.Instance.LogPlayerDeath();
             Death();
         }
     }

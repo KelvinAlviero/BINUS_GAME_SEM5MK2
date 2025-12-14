@@ -111,6 +111,15 @@ public class Player_Movement : MonoBehaviour
     {
         horizontalInput = horizontalInputFromKeyboard; // Returns -1, 0, or 1
         // Animation
+        if (horizontalInput > 0)
+        {
+            DataLogger.Instance.LogPlayerMovement("Right");
+        }
+        else if (horizontalInput < 0)
+        {
+            DataLogger.Instance.LogPlayerMovement("Left");
+        }
+
         animator.SetBool("IsWalking", horizontalInput != 0);
     }
 
@@ -118,6 +127,7 @@ public class Player_Movement : MonoBehaviour
     {
         if (isGrounded && stats.CanSpendStamina(jumpCost))
         {
+            DataLogger.Instance.LogPlayerJump();
             AudioManager.instance.PlaySoundFXClip(jumpSoundEffect, transform, 0.5f);
             stats.DrainStamina(jumpCost);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -128,6 +138,7 @@ public class Player_Movement : MonoBehaviour
     {
         if (canDash && stats.CanSpendStamina(dashCost))
         {
+            DataLogger.Instance.LogPlayerDash();
             AudioManager.instance.PlaySoundFXClip(dashSoundEffect, transform, 0.5f);
             stats.DrainStamina(dashCost);
             StartCoroutine(Dashing());

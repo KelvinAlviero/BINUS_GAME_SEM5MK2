@@ -66,6 +66,9 @@ public class Player_Attack : MonoBehaviour
     {
         Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, new Vector3(attackRange, 3), 0, enemyLayer);
 
+        bool hitSomething = hitEnemies.Length > 0;
+        DataLogger.Instance.LogPlayerAttack(hitSomething);
+
         foreach (Collider2D hit in hitEnemies)
         {
             DamageEnemy(hit);

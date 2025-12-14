@@ -1,6 +1,8 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEngine;
-using System.Collections;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Enemy_Script : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class Enemy_Script : MonoBehaviour
     [SerializeField] private AudioClip hurtSoundEffect;
     [SerializeField] private AudioClip blockSoundEffect;
     [SerializeField] private AudioClip dashSoundEffect;
+    [SerializeField] private AudioClip shootSoundEffect;
 
     [Header("PlayerStats")]
     public GameObject player;
@@ -57,7 +60,7 @@ public class Enemy_Script : MonoBehaviour
 
     private bool isFlipped = false;
     private HP_BarScript hp_BarScript;
-
+    private float combatStartTime = 0f;
     public bool PlayerIsAttacking => playerAttackScript != null && playerAttackScript.isAttacking;
 
     private void Awake()
@@ -72,6 +75,9 @@ public class Enemy_Script : MonoBehaviour
         hp_BarScript.SetMaxHealth(enemyHealth);
         rb = transform.GetComponent<Rigidbody2D>();
         playerAttackScript = player.GetComponent<Player_Attack>();
+
+        combatStartTime = Time.time;
+        DataLogger.Instance.LogCombatStart();
     }
 
     public void Update()
@@ -116,6 +122,8 @@ public class Enemy_Script : MonoBehaviour
     {
         if (Time.time >= lastDodgeTime + dodgeCooldown && !isDodging)
         {
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+            DataLogger.Instance.LogAIDodge(distance);
             StartCoroutine(DodgeDash());
             lastDodgeTime = Time.time;
         }
@@ -157,6 +165,10 @@ public class Enemy_Script : MonoBehaviour
 
     private void DealShootDamage()
     {
+        float distance = Vector2.Distance(transform.position, player.transform.position);
+        AudioManager.instance.PlaySoundFXClip(shootSoundEffect, transform, 0.5f);
+        DataLogger.Instance.LogAIRangeAttack(distance);
+
         GameObject currentBullet = Instantiate(bullet, enemyRangeAttackPos.position, Quaternion.identity);
         Rigidbody2D bulletRigidBody = currentBullet.GetComponent<Rigidbody2D>();
         Vector2 direction = player.transform.position - currentBullet.transform.position;
@@ -174,7 +186,11 @@ public class Enemy_Script : MonoBehaviour
 
     private void MeleeDamageCollider(float meleeDamage)
     {
+        float distance = Vector2.Distance(transform.position, player.transform.position);
         Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(enemyMeleeAttackPos.position, new Vector3(enemyMeleeColliderRadius, 3), 0, playerLayer);
+
+        bool hitPlayer = hitEnemies.Length > 0;
+        DataLogger.Instance.LogAIMeleeAttack(hitPlayer, distance);
 
         foreach (Collider2D hit in hitEnemies)
         {
@@ -187,7 +203,10 @@ public class Enemy_Script : MonoBehaviour
         // Check invincibility FIRST
         if (enemyIsInvincible || isDodging)
         {
-            Debug.Log("<color=green>[DAMAGE AVOIDED] Enemy is invincible/dodging!</color>");
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+            DataLogger.Instance.LogAIDamage(0f, "Avoided", distance);
+
+            //Debug.Log("<color=green>[DAMAGE AVOIDED] Enemy is invincible/dodging!</color>");
             return;
         }
 
@@ -197,12 +216,14 @@ public class Enemy_Script : MonoBehaviour
             // Check if block is ACTIVE (not just the flag)
             if (IsBlockActive())
             {
-                Debug.Log("<color=cyan>[BLOCKED] Damage reduced by 75%!</color>");
+                float distance = Vector2.Distance(transform.position, player.transform.position);
+                DataLogger.Instance.LogAIBlock(distance, "Predictive");
+
                 BlockDamage(damage);
             }
             else
             {
-                Debug.Log("<color=red>[FULL DAMAGE] No active defense</color>");
+                //Debug.Log("<color=red>[FULL DAMAGE] No active defense</color>");
                 TakeFullDamage(damage);
             }
         }
@@ -216,6 +237,9 @@ public class Enemy_Script : MonoBehaviour
 
             if (Random.value <= percentageBlocking && !isDodging)
             {
+                float distance = Vector2.Distance(transform.position, player.transform.position);
+                DataLogger.Instance.LogAIBlock(distance, "Reactive");
+
                 BlockDamage(damage);
             }
             else
@@ -226,7 +250,9 @@ public class Enemy_Script : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Death();
+            float timeSurvived = Time.time - combatStartTime;
+            DataLogger.Instance.LogAIDeath(timeSurvived);
+            Death(); 
         }
     }
 
@@ -249,19 +275,27 @@ public class Enemy_Script : MonoBehaviour
 
     private void BlockDamage(float damage)
     {
-        AudioManager.instance.PlaySoundFXClipWithRandomPitch(blockSoundEffect, transform, 0.5f);
+        float blockedDamage = (damage * 0.5f);
+        float distance = Vector2.Distance(transform.position, player.transform.position);
+
+        AudioManager.instance.PlaySoundFXClipWithRandomPitch(blockSoundEffect, transform, 0.5f);    
         Hitstop.instance.Stop(0.1f);
-        float blockedDamage = (damage * 0.25f);
-        Debug.Log($"<color=yellow>[BLOCK SUCCESS] Enemy blocked! Took {blockedDamage} instead of {damage}</color>");
+        DataLogger.Instance.LogAIDamage(blockedDamage, "Blocked", distance);
+
+        //Debug.Log($"<color=yellow>[BLOCK SUCCESS] Enemy blocked! Took {blockedDamage} instead of {damage}</color>");
         currentHealth -= blockedDamage;
         hp_BarScript.SetHealth(currentHealth);
     }
 
     private void TakeFullDamage(float damage)
     {
+        float distance = Vector2.Distance(transform.position, player.transform.position);
+
         AudioManager.instance.PlaySoundFXClipWithRandomPitch(hurtSoundEffect, transform, 0.5f);
         Hitstop.instance.Stop(0.1f);
-        Debug.Log($"[FULL DAMAGE] Enemy took {damage} damage");
+        DataLogger.Instance.LogAIDamage(damage, "Full", distance);
+
+        //Debug.Log($"[FULL DAMAGE] Enemy took {damage} damage");
         currentHealth -= damage;
         hp_BarScript.SetHealth(currentHealth);
     }

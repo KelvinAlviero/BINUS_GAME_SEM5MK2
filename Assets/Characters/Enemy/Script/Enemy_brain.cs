@@ -28,6 +28,10 @@ public class Enemy_brain : MonoBehaviour
     private float currentConfidence = 0f;
     private float lastDecisionTime = 0f;
 
+    // *** NEW: Movement logging cooldown to prevent spam ***
+    private float lastMovementLogTime = 0f;
+    private float movementLogCooldown = 0.3f; // Log movement every 0.3 seconds
+
     [Header("Debug")]
     public bool showDebugLogs = false;
 
@@ -59,18 +63,14 @@ public class Enemy_brain : MonoBehaviour
         float[] decisions = neuralNet.FeedForward(inputNodes);
 
         // CRITICAL: Activate block IMMEDIATELY when player starts attacking
-        // This ensures block is active BEFORE damage lands
         if (body.PlayerIsAttacking && !body.isBlocking && !body.isDodging)
         {
             float distToPlayer = Vector2.Distance(transform.position, player.transform.position);
 
-            // Only pre-emptively block if player is close enough to hit us
-            if (distToPlayer <= meleeRange * 1.5f) // Increased range for better reaction
+            if (distToPlayer <= meleeRange * 1.5f)
             {
-                // LOWERED threshold for blocking specifically - we want to react fast!
-                float blockThreshold = decisionThreshold * 0.5f; // Half the normal threshold
+                float blockThreshold = decisionThreshold * 0.5f;
 
-                // Check if block output is strong enough
                 if (decisions[2] >= blockThreshold)
                 {
                     body.ActivateBlock();
@@ -93,8 +93,6 @@ public class Enemy_brain : MonoBehaviour
             DebugDecisions(decisions);
         }
     }
-
-
 
     private void GatherInputs()
     {
@@ -202,35 +200,47 @@ public class Enemy_brain : MonoBehaviour
         ExecuteAction(currentAction, distToPlayer);
     }
 
+    // *** UPDATED: Added logging for all decision switches ***
     private bool ShouldSwitchDecision(int newAction, float newConfidence, float distToPlayer)
     {
         // First decision
         if (currentAction == -1)
         {
-            return newConfidence >= decisionThreshold;
+            if (newConfidence >= decisionThreshold)
+            {
+                // Log the first decision
+                string[] actionNames = { "WalkRight", "WalkLeft", "Block", "Dodge", "Melee", "Ranged" };
+                DataLogger.Instance.LogAIDecision(actionNames[newAction], newConfidence, distToPlayer);
+                return true;
+            }
+            return false;
         }
 
         // CRITICAL: Force block if player is attacking and we're close
         if (newAction == 2 && body.PlayerIsAttacking && distToPlayer <= meleeRange && newConfidence >= decisionThreshold)
         {
+            DataLogger.Instance.LogAIDecision("Block", newConfidence, distToPlayer);
             return true;
         }
 
-        // CRITICAL: Force melee if very close (override stability)
+        // CRITICAL: Force melee if very close
         if (newAction == 4 && distToPlayer <= meleeRange && newConfidence >= decisionThreshold)
         {
+            DataLogger.Instance.LogAIDecision("Melee", newConfidence, distToPlayer);
             return true;
         }
 
-        // CRITICAL: Force ranged if at good range (override stability)
+        // CRITICAL: Force ranged if at good range
         if (newAction == 5 && distToPlayer > meleeRange && distToPlayer <= rangedRange && newConfidence >= decisionThreshold)
         {
+            DataLogger.Instance.LogAIDecision("Ranged", newConfidence, distToPlayer);
             return true;
         }
 
         // Dodge should interrupt anything
         if (newAction == 3 && body.PlayerIsAttacking && newConfidence >= decisionThreshold)
         {
+            DataLogger.Instance.LogAIDecision("Dodge", newConfidence, distToPlayer);
             return true;
         }
 
@@ -250,6 +260,8 @@ public class Enemy_brain : MonoBehaviour
         // Significantly better action
         if (newConfidence >= decisionThreshold && newConfidence > currentConfidence + confidenceMargin)
         {
+            string[] actionNames = { "WalkRight", "WalkLeft", "Block", "Dodge", "Melee", "Ranged" };
+            DataLogger.Instance.LogAIDecision(actionNames[newAction], newConfidence, distToPlayer);
             return true;
         }
 
@@ -270,7 +282,6 @@ public class Enemy_brain : MonoBehaviour
             }
             body.meleeAttack = false;
             body.rangeAttack = false;
-            // Don't clear blocking here - let it expire naturally
             return;
         }
 
@@ -280,21 +291,18 @@ public class Enemy_brain : MonoBehaviour
                 MoveEnemy(1);
                 body.meleeAttack = false;
                 body.rangeAttack = false;
-                // Don't clear blocking - let it expire
                 break;
 
             case 1: // Walk Left
                 MoveEnemy(-1);
                 body.meleeAttack = false;
                 body.rangeAttack = false;
-                // Don't clear blocking - let it expire
                 break;
 
             case 2: // Block
-                    // NEW: Use ActivateBlock() method instead of setting flag directly
                 if (body.PlayerIsAttacking)
                 {
-                    body.ActivateBlock(); // This sets blocking with a timer
+                    body.ActivateBlock();
                     StopMovement();
                     body.meleeAttack = false;
                     body.rangeAttack = false;
@@ -306,7 +314,6 @@ public class Enemy_brain : MonoBehaviour
                 }
                 else
                 {
-                    // Player not attacking - allow new decision
                     currentAction = -1;
                     if (showDebugLogs)
                     {
@@ -373,6 +380,7 @@ public class Enemy_brain : MonoBehaviour
         }
     }
 
+    // *** UPDATED: Added logging with cooldown ***
     private void MoveTowardPlayer()
     {
         if (enemyRb != null && player != null)
@@ -380,10 +388,20 @@ public class Enemy_brain : MonoBehaviour
             Vector2 playerPos = player.transform.position;
             Vector2 enemyPos = transform.position;
             float direction = (playerPos.x > enemyPos.x) ? 1 : -1;
+
+            // Log movement with cooldown to prevent spam
+            if (Time.time - lastMovementLogTime >= movementLogCooldown)
+            {
+                float distance = Vector2.Distance(enemyPos, playerPos);
+                DataLogger.Instance.LogAIMovement("TowardPlayer", distance);
+                lastMovementLogTime = Time.time;
+            }
+
             enemyRb.linearVelocity = new Vector2(direction * body.enemyWalkSpeed, enemyRb.linearVelocity.y);
         }
     }
 
+    // *** UPDATED: Added logging with cooldown ***
     private void MoveAwayFromPlayer()
     {
         if (enemyRb != null && player != null)
@@ -391,22 +409,50 @@ public class Enemy_brain : MonoBehaviour
             Vector2 playerPos = player.transform.position;
             Vector2 enemyPos = transform.position;
             float direction = (enemyPos.x > playerPos.x) ? 1 : -1;
+
+            // Log movement with cooldown to prevent spam
+            if (Time.time - lastMovementLogTime >= movementLogCooldown)
+            {
+                float distance = Vector2.Distance(enemyPos, playerPos);
+                DataLogger.Instance.LogAIMovement("AwayFromPlayer", distance);
+                lastMovementLogTime = Time.time;
+            }
+
             enemyRb.linearVelocity = new Vector2(direction * body.enemyWalkSpeed, enemyRb.linearVelocity.y);
         }
     }
 
+    // *** UPDATED: Added logging with cooldown ***
     private void StopMovement()
     {
         if (enemyRb != null)
         {
+            // Log movement with cooldown to prevent spam
+            if (player != null && Time.time - lastMovementLogTime >= movementLogCooldown)
+            {
+                float distance = Vector2.Distance(transform.position, player.transform.position);
+                DataLogger.Instance.LogAIMovement("Stop", distance);
+                lastMovementLogTime = Time.time;
+            }
+
             enemyRb.linearVelocity = new Vector2(0, enemyRb.linearVelocity.y);
         }
     }
 
+    // *** UPDATED: Added logging with cooldown ***
     private void MoveEnemy(float direction)
     {
         if (enemyRb != null)
         {
+            // Log movement with cooldown to prevent spam
+            if (player != null && Time.time - lastMovementLogTime >= movementLogCooldown)
+            {
+                float distance = Vector2.Distance(transform.position, player.transform.position);
+                string movementType = direction > 0 ? "Right" : "Left";
+                DataLogger.Instance.LogAIMovement(movementType, distance);
+                lastMovementLogTime = Time.time;
+            }
+
             enemyRb.linearVelocity = new Vector2(direction * body.enemyWalkSpeed, enemyRb.linearVelocity.y);
         }
     }
@@ -439,7 +485,6 @@ public class Enemy_brain : MonoBehaviour
             debug += $"  [{i}] {actionNames[i]}: {outputs[i]:F3}{status}\n";
         }
 
-        // Find best action
         int bestIdx = 0;
         float bestVal = outputs[0];
         for (int i = 1; i < outputs.Length; i++)
@@ -452,8 +497,6 @@ public class Enemy_brain : MonoBehaviour
         }
 
         debug += $"\nBEST ACTION: {actionNames[bestIdx]} ({bestVal:F3})";
-
-        // Attack checks
         debug += $"\n\nATTACK STATUS:\n";
         debug += $"  Melee Flag: {body.meleeAttack} (In Range: {distToPlayer <= meleeRange})\n";
         debug += $"  Ranged Flag: {body.rangeAttack} (In Range: {distToPlayer <= rangedRange})\n";
