@@ -23,6 +23,8 @@ public class Enemy_Script : MonoBehaviour
     Player_Stats stats;
 
     [Header("Enemy Stats")]
+    [SerializeField] private GameObject youWonText;
+    [SerializeField] private Entity_VFX damageFlashVfx;
     [SerializeField] private float enemyHealth = 10f;
     private float currentHealth;
     float nextAttackTime = 0f;
@@ -65,6 +67,7 @@ public class Enemy_Script : MonoBehaviour
 
     private void Awake()
     {
+        damageFlashVfx = GetComponent<Entity_VFX>();
         hp_BarScript = enemyhp_BarGameObject.GetComponent<HP_BarScript>();
     }
 
@@ -252,7 +255,9 @@ public class Enemy_Script : MonoBehaviour
         {
             float timeSurvived = Time.time - combatStartTime;
             DataLogger.Instance.LogAIDeath(timeSurvived);
-            Death(); 
+            youWonText.SetActive(true);
+
+            Invoke("Death", 0.01f);
         }
     }
 
@@ -290,6 +295,8 @@ public class Enemy_Script : MonoBehaviour
     private void TakeFullDamage(float damage)
     {
         float distance = Vector2.Distance(transform.position, player.transform.position);
+        // play vfx
+        damageFlashVfx.PlayOnDamageVfx();
 
         AudioManager.instance.PlaySoundFXClipWithRandomPitch(hurtSoundEffect, transform, 0.5f);
         Hitstop.instance.Stop(0.1f);

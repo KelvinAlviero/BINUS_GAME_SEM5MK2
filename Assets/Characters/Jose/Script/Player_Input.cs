@@ -4,15 +4,21 @@ public class Player_Input : MonoBehaviour
 {
     [Header("Reference")]
     public GameObject playerInventoryUI;
+    [SerializeField] private GameObject playerPauseMenuUI;
     private Player_Attack playerAttackScript;
     private Player_Movement playerMovementScript;
     private Player_Stats playerStatsScript;
+    private PauseMenu pauseMenuScript;
 
     private bool isInventoryOpen = false;
+    private bool isPauseMenuOpen = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        pauseMenuScript = playerPauseMenuUI.GetComponent<PauseMenu>();
         playerAttackScript = GetComponent<Player_Attack>();
         playerMovementScript = GetComponent<Player_Movement>();
         playerStatsScript = GetComponent<Player_Stats>();
@@ -21,12 +27,17 @@ public class Player_Input : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetBlockingInput();
-        GetWalkingInput();
-        GetJumpingInput();
-        GetDashingInput();
-        GetAttackInput();
-        GetToggleInventoryInput();
+        GetPauseMenuInput();
+        if (!isPauseMenuOpen) 
+        {
+            GetBlockingInput();
+            GetWalkingInput();
+            GetJumpingInput();
+            GetDashingInput();
+            GetAttackInput();
+            GetToggleInventoryInput();
+        }
+       
     }
 
     private void GetBlockingInput()
@@ -65,6 +76,14 @@ public class Player_Input : MonoBehaviour
         playerMovementScript.TryWalkingInput(horizontalInput);
     }
 
+    private void GetPauseMenuInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+    }
+
     private void GetAttackInput()
     {
         if (Input.GetMouseButtonDown(0) && !playerStatsScript.isBlocking)
@@ -81,6 +100,26 @@ public class Player_Input : MonoBehaviour
             ToggleInventory();
         }
     }
+
+    private void TogglePause()
+    {
+        isPauseMenuOpen = !isPauseMenuOpen;
+        if (isPauseMenuOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            playerPauseMenuUI.SetActive(true);
+            pauseMenuScript.PauseGame();
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            playerPauseMenuUI.SetActive(false);
+            pauseMenuScript.ResumeGame();
+        }
+    }
+
 
     private void ToggleInventory()
     {

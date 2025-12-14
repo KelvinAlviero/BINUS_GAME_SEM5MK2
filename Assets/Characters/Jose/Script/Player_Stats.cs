@@ -11,10 +11,13 @@ public class Player_Stats : MonoBehaviour
     [Header("References")]
     public GameObject hp_BarGameObject;
     public GameObject stamina_BarGameObject;
+    [SerializeField] private GameObject deathMenuGameObject;
     private Stamina_BarScript stamina_BarScript;
     private HP_BarScript hp_BarScript;
     [SerializeField] private AudioClip hurtSoundEffect;
     [SerializeField] private AudioClip blockSoundEffect;
+    [SerializeField] private Entity_VFX damageFlashVfx;
+
     public bool isBlocking = false;
 
     private float _playerCurrentHealth;
@@ -77,6 +80,7 @@ public class Player_Stats : MonoBehaviour
 
     void Awake()
     {
+        damageFlashVfx = GetComponent<Entity_VFX>();
         stamina_BarScript = stamina_BarGameObject.GetComponent<Stamina_BarScript>();
         hp_BarScript = hp_BarGameObject.GetComponent<HP_BarScript>();
     }
@@ -124,6 +128,7 @@ public class Player_Stats : MonoBehaviour
             return;
         }
 
+        damageFlashVfx.PlayOnDamageVfx();
         Hitstop.instance.Stop(0.1f);
         AudioManager.instance.PlaySoundFXClipWithRandomPitch(hurtSoundEffect, transform, 0.5f);
         DataLogger.Instance.LogPlayerDamage(damage, false);
@@ -138,8 +143,11 @@ public class Player_Stats : MonoBehaviour
 
         if (playerCurrentHealth <= 0)
         {
+            deathMenuGameObject.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             DataLogger.Instance.LogPlayerDeath();
-            Death();
+            Invoke("Death", 0.01f);
         }
     }
 
@@ -163,6 +171,6 @@ public class Player_Stats : MonoBehaviour
 
     private void Death()
     {
-        Debug.Log("Player has died");
+        Destroy(gameObject);
     }
 }
