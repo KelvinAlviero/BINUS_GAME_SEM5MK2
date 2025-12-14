@@ -3,17 +3,84 @@ using UnityEngine;
 public class Player_Stats : MonoBehaviour
 {
     [Header("PlayerStats")]
-    public float playerMaxHealth = 100f;
-    public float playerMaxStamina = 100f;
-    public float staminaRegenRate = 1.0f;
+    [SerializeField] private float playerMaxHealth = 100f;
+    [SerializeField] private float playerMaxStamina = 100f;
+    [SerializeField] private float staminaRegenRate = 1.0f;
+    [SerializeField] private float staminaBlockDrain = 30f;
 
     [Header("References")]
-    public HP_BarScript hp_BarScript;
-    public Stamina_BarScript stamina_BarScript;
+    public GameObject hp_BarGameObject;
+    public GameObject stamina_BarGameObject;
+    private Stamina_BarScript stamina_BarScript;
+    private HP_BarScript hp_BarScript;
+    [SerializeField] private AudioClip hurtSoundEffect;
+    [SerializeField] private AudioClip blockSoundEffect;
+    public bool isBlocking = false;
 
-    private float playerCurrentHealth;
-    private float playerCurrentStamina;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private float _playerCurrentHealth;
+    private float _playerCurrentStamina;
+
+    // GETTERS AND SETTERS
+
+    // Current Health
+    public float playerCurrentHealth
+    {
+        get { return _playerCurrentHealth; }
+        set
+        {
+            _playerCurrentHealth = Mathf.Clamp(value, 0f, playerMaxHealth);
+            if (hp_BarScript != null)
+            {
+                hp_BarScript.SetHealth(_playerCurrentHealth);
+            }
+        }
+    }
+
+    // Max Health
+    public float playerMaxHealthValue
+    {
+        get { return playerMaxHealth; }
+        set
+        {
+            playerMaxHealth = Mathf.Max(0f, value);
+            if (hp_BarScript != null)
+            {
+                hp_BarScript.SetMaxHealth(playerMaxHealth);
+            }
+        }
+    }
+
+    // Current Stamina
+    public float playerCurrentStamina
+    {
+        get { return _playerCurrentStamina; }
+        set
+        {
+            _playerCurrentStamina = Mathf.Clamp(value, 0f, playerMaxStamina);
+            UpdateStaminaBar();
+        }
+    }
+
+    // Max Stamina
+    public float playerMaxStaminaValue
+    {
+        get { return playerMaxStamina; }
+        set
+        {
+            playerMaxStamina = Mathf.Max(0f, value);
+            if (stamina_BarScript != null)
+            {
+                stamina_BarScript.SetMaxStamina(playerMaxStamina);
+            }
+        }
+    }
+
+    void Awake()
+    {
+        stamina_BarScript = stamina_BarGameObject.GetComponent<Stamina_BarScript>();
+        hp_BarScript = hp_BarGameObject.GetComponent<HP_BarScript>();
+    }
+
     void Start()
     {
         playerCurrentHealth = playerMaxHealth;
@@ -22,21 +89,17 @@ public class Player_Stats : MonoBehaviour
         hp_BarScript.SetMaxHealth(playerMaxHealth);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (playerCurrentStamina < playerMaxStamina)
         {
             playerCurrentStamina += staminaRegenRate * Time.deltaTime;
-            playerCurrentStamina = Mathf.Clamp(playerCurrentStamina, 0f, playerMaxStamina);
-            UpdateStaminaBar();
         }
     }
 
     public void DrainStamina(float amount)
     {
         playerCurrentStamina -= amount;
-        UpdateStaminaBar();
     }
 
     public bool CanSpendStamina(float amount)
@@ -48,22 +111,27 @@ public class Player_Stats : MonoBehaviour
     {
         if (stamina_BarScript != null)
         {
-            //float percentage = playerCurrentStamina / playerMaxStamina;
-            stamina_BarScript.SetStamina(playerCurrentStamina); 
+            stamina_BarScript.SetStamina(_playerCurrentStamina);
         }
     }
 
     public void TakeDamage(float damage)
     {
+        if (CheckIfBlocking())
+        {
+            AudioManager.instance.PlaySoundFXClipWithRandomPitch(blockSoundEffect, transform, 0.5f);
+            return;
+        }
+
+        Hitstop.instance.Stop(0.1f);
+        AudioManager.instance.PlaySoundFXClipWithRandomPitch(hurtSoundEffect, transform, 0.5f);
         playerCurrentHealth -= damage;
-        playerMaxStamina -= damage;
-        if (playerCurrentStamina > playerMaxStamina) DrainStamina(damage); 
+        playerMaxStaminaValue -= damage; // Using the setter to update max stamina
 
-        //playerCurrentStamina = playerMaxStamina;
-
-        hp_BarScript.SetHealth(playerCurrentHealth);
-        // temporary
-        //stamina_BarScript.SetStamina(playerCurrentStamina);
+        if (playerCurrentStamina > playerMaxStamina)
+        {
+            DrainStamina(damage);
+        }
 
         if (playerCurrentHealth <= 0)
         {
@@ -71,7 +139,25 @@ public class Player_Stats : MonoBehaviour
         }
     }
 
-    private void Death() 
+    private bool CheckIfBlocking()
+    {
+        if (isBlocking)
+        {
+            if (playerCurrentStamina >= staminaBlockDrain)
+            {
+                DrainStamina(staminaBlockDrain);
+                return true;
+            }
+            else
+            {
+                Debug.Log("Not enough stamina to block!");
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private void Death()
     {
         Debug.Log("Player has died");
     }

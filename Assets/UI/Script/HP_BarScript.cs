@@ -10,14 +10,14 @@ public class HP_BarScript : MonoBehaviour
         hpBarSlider.maxValue = health;
         hpBarSlider.value = health;
         // code bellow is temporary
-        hpBarUISlider.maxValue = health;
-        hpBarUISlider.value = health;
+        //hpBarUISlider.maxValue = health;
+        //hpBarUISlider.value = health;
     }
 
     public void SetHealth(float health) 
     {
         hpBarSlider.value = health;
         // code bellow is temporary
-        hpBarUISlider.value = health;
+        //hpBarUISlider.value = health;
     }
 }

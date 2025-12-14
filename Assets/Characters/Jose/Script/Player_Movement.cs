@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip dashSoundEffect;
+    [SerializeField] private AudioClip jumpSoundEffect;
+
     [Header("Movement Settings")]
     public float walkSpeed = 8f;
     public float jumpForce = 20f;
@@ -50,7 +54,21 @@ public class Player_Movement : MonoBehaviour
 
         CheckIfPlayerGrounded();
 
-        HandlePlayerMovement();        
+        HandlePlayerMovement();
+
+        HandleJumpAnimation();
+    }
+
+    private void HandleJumpAnimation()
+    {
+        if (isGrounded)
+        {
+            animator.SetBool("IsJumping", false);
+        }
+        else
+        {
+            animator.SetBool("IsJumping", true);
+        }
     }
 
     private void HandlePlayerMovement()
@@ -100,25 +118,17 @@ public class Player_Movement : MonoBehaviour
     {
         if (isGrounded && stats.CanSpendStamina(jumpCost))
         {
+            AudioManager.instance.PlaySoundFXClip(jumpSoundEffect, transform, 0.5f);
             stats.DrainStamina(jumpCost);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-
-        // Animation
-        if (!isGrounded)
-        {
-            animator.SetBool("IsJumping", true);
-        }
-        else
-        {
-            animator.SetBool("IsJumping", false);
         }
     }
 
     public void TryDashingInput()
     {
-        if (Input.GetMouseButtonDown(1) && canDash && stats.CanSpendStamina(dashCost))
+        if (canDash && stats.CanSpendStamina(dashCost))
         {
+            AudioManager.instance.PlaySoundFXClip(dashSoundEffect, transform, 0.5f);
             stats.DrainStamina(dashCost);
             StartCoroutine(Dashing());
         }
