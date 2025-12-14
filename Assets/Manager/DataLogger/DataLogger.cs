@@ -1,24 +1,24 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DataLogger : MonoBehaviour
 {
     public static DataLogger Instance { get; private set; }
 
-    // ============================================
-    // Enemy_Script.cs - COMPLETE UPDATED VERSION
-    // ============================================
-
     [Header("Session Settings")]
     public string participantID = "P001";
     public string aiType = "Traditional"; // "Traditional" or "Adaptive"
-    public int sessionNumber = 1; // 1 for first AI, 2 for second AI
+    public int sessionNumber = 1;
+    public int attemptNumber = 1; // Track attempts within same AI type
 
     private List<LogEntry> logEntries = new List<LogEntry>();
     private float sessionStartTime;
     private float lastPlayerAttackTime = 0f;
+    private float lastAIAttackTime = 0f;
+    private float combatStartTime = 0f;
 
     [System.Serializable]
     public class LogEntry
@@ -26,17 +26,20 @@ public class DataLogger : MonoBehaviour
         public string ParticipantID;
         public string AIType;
         public int SessionNumber;
+        public int AttemptNumber;
         public float Timestamp;
         public string EventType;
         public string EventDetails;
         public float TimeSinceLastAttack;
 
-        public LogEntry(string participantID, string aiType, int sessionNumber, float timestamp,
-                       string eventType, string eventDetails = "", float timeSinceLastAttack = 0f)
+        public LogEntry(string participantID, string aiType, int sessionNumber, int attemptNumber,
+                       float timestamp, string eventType, string eventDetails = "",
+                       float timeSinceLastAttack = 0f)
         {
             ParticipantID = participantID;
             AIType = aiType;
             SessionNumber = sessionNumber;
+            AttemptNumber = attemptNumber;
             Timestamp = timestamp;
             EventType = eventType;
             EventDetails = eventDetails;
@@ -46,7 +49,6 @@ public class DataLogger : MonoBehaviour
 
     void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -58,10 +60,55 @@ public class DataLogger : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Skip if it's the main menu or non-gameplay scene
+        if (scene.name == "MainMenu" || scene.name.Contains("Menu"))
+        {
+            Debug.Log($"[DataLogger] Menu scene loaded, skipping session setup");
+            return;
+        }
+
+        // Save previous session if there's data
+        if (logEntries.Count > 0)
+        {
+            SaveToCSV();
+        }
+
+        // Detect AI type from scene name and set session number
+        if (scene.name.Contains("Neural") || scene.name.Contains("Adaptive"))
+        {
+            aiType = "Adaptive";
+            sessionNumber = 2;
+        }
+        else if (scene.name.Contains("State") || scene.name.Contains("Traditional"))
+        {
+            aiType = "Traditional";
+            sessionNumber = 1;
+        }
+
+        // Start fresh session
+        ClearLogs();
+        attemptNumber = 1; // Reset attempt counter for new scene
+        sessionStartTime = Time.time;
+
+        Debug.Log($"[DataLogger] NEW SESSION - Scene: {scene.name} | AI: {aiType} | Session: {sessionNumber}");
+    }
+
     void Start()
     {
         sessionStartTime = Time.time;
-        Debug.Log($"[DataLogger] Session started - Participant: {participantID}, AI: {aiType}");
+        Debug.Log($"[DataLogger] DataLogger initialized - Participant: {participantID}");
     }
 
     // ==================== PLAYER ACTION LOGGING ====================
@@ -105,12 +152,10 @@ public class DataLogger : MonoBehaviour
     public void LogPlayerDeath()
     {
         AddLog("PlayerDeath");
-        Debug.Log($"[LOG] Player Death");
+        Debug.Log($"[LOG] Player Death - Attempt {attemptNumber} Failed");
     }
 
     // ==================== AI ACTION LOGGING ====================
-
-    private float lastAIAttackTime = 0f;
 
     public void LogAIMeleeAttack(bool hitPlayer, float distance)
     {
@@ -152,7 +197,6 @@ public class DataLogger : MonoBehaviour
 
     public void LogAIDamage(float damageAmount, string damageType, float distance)
     {
-        // damageType: "Full", "Blocked", "Avoided"
         string details = $"{damageType}|{damageAmount}|Dist:{distance:F2}";
         AddLog("AITakeDamage", details);
         Debug.Log($"[LOG] AI Damage - {damageType}: {damageAmount} | Distance: {distance:F2}");
@@ -160,8 +204,9 @@ public class DataLogger : MonoBehaviour
 
     public void LogCombatStart()
     {
+        combatStartTime = Time.time;
         AddLog("CombatStart");
-        Debug.Log("[LOG] Combat Started");
+        Debug.Log($"[LOG] Combat Started - Session {sessionNumber}, Attempt {attemptNumber}");
     }
 
     public void LogAIDeath(float timeSurvived)
@@ -171,36 +216,61 @@ public class DataLogger : MonoBehaviour
         Debug.Log($"[LOG] AI Death | Time Survived: {timeSurvived:F2}s");
     }
 
-    // ==================== AI DECISION LOGGING (Neural Network) ====================
+    // ==================== AI DECISION LOGGING ====================
 
     public void LogAdaptation(string adaptationType, float triggerValue, float distance)
     {
-        string logEntry = $"{Time.time:F2},ADAPTATION,{adaptationType},{triggerValue:F3},{distance:F2}";
-        Debug.Log($"[DATA] {logEntry}");
-        // TODO: Write to your CSV/file
+        string details = $"{adaptationType}|Trigger:{triggerValue:F3}|Dist:{distance:F2}";
+        AddLog("AIAdaptation", details);
+        Debug.Log($"[LOG] AI Adaptation - {adaptationType} | Trigger: {triggerValue:F3}");
     }
 
     public void LogPlayerAction(string actionType, float distance)
     {
-        string logEntry = $"{Time.time:F2},PLAYER_ACTION,{actionType},{distance:F2}";
-        Debug.Log($"[DATA] {logEntry}");
-        // TODO: Write to your CSV/file
+        string details = $"{actionType}|Dist:{distance:F2}";
+        AddLog("PlayerAction", details);
     }
 
     public void LogAIDecision(string actionName, float confidence, float distance = 0f)
     {
         string details = $"{actionName}|Conf:{confidence:F3}|Dist:{distance:F2}";
         AddLog("AIDecision", details);
-        Debug.Log($"[LOG] AI Decision - {actionName} | Confidence: {confidence:F3} | Distance: {distance:F2}");
+        Debug.Log($"[LOG] AI Decision - {actionName} | Confidence: {confidence:F3}");
     }
-
-    // ==================== AI MOVEMENT LOGGING ====================
 
     public void LogAIMovement(string movementType, float distance = 0f)
     {
-        // movementType: "TowardPlayer", "AwayFromPlayer", "Stop", "Left", "Right"
         string details = $"{movementType}|Dist:{distance:F2}";
         AddLog("AIMovement", details);
+    }
+
+    // ==================== SESSION MANAGEMENT ====================
+
+    public void EndCombat(string outcome)
+    {
+        // outcome: "PlayerVictory" or "PlayerDefeat"
+        AddLog("CombatEnd", outcome);
+        Debug.Log($"[DataLogger] ========================================");
+        Debug.Log($"[DataLogger] COMBAT ENDED: {outcome}");
+        Debug.Log($"[DataLogger] Session: {sessionNumber} | AI: {aiType} | Attempt: {attemptNumber}");
+        Debug.Log($"[DataLogger] Events logged: {logEntries.Count}");
+        Debug.Log($"[DataLogger] ========================================");
+
+        // Save immediately after combat ends
+        SaveToCSV();
+    }
+
+    public void StartNewAttempt()
+    {
+        // Don't clear logs - just increment attempt number for new try
+        attemptNumber++;
+        sessionStartTime = Time.time;
+        lastPlayerAttackTime = 0f;
+        lastAIAttackTime = 0f;
+
+        Debug.Log($"[DataLogger] ----------------------------------------");
+        Debug.Log($"[DataLogger] NEW ATTEMPT #{attemptNumber} - AI: {aiType}");
+        Debug.Log($"[DataLogger] ----------------------------------------");
     }
 
     // ==================== CORE LOGGING FUNCTION ====================
@@ -212,6 +282,7 @@ public class DataLogger : MonoBehaviour
             participantID,
             aiType,
             sessionNumber,
+            attemptNumber,
             timestamp,
             eventType,
             eventDetails,
@@ -224,6 +295,12 @@ public class DataLogger : MonoBehaviour
 
     public void SaveToCSV()
     {
+        if (logEntries.Count == 0)
+        {
+            Debug.Log("[DataLogger] No data to save");
+            return;
+        }
+
         string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         string fileName = $"GameplayData_{participantID}_{aiType}_Session{sessionNumber}_{timestamp}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
@@ -233,23 +310,25 @@ public class DataLogger : MonoBehaviour
             using (StreamWriter writer = new StreamWriter(filePath))
             {
                 // Write header
-                writer.WriteLine("ParticipantID,AIType,SessionNumber,Timestamp,EventType,EventDetails,TimeSinceLastAttack");
+                writer.WriteLine("ParticipantID,AIType,SessionNumber,AttemptNumber,Timestamp,EventType,EventDetails,TimeSinceLastAttack");
 
                 // Write all log entries
                 foreach (LogEntry entry in logEntries)
                 {
                     writer.WriteLine($"{entry.ParticipantID},{entry.AIType},{entry.SessionNumber}," +
-                                   $"{entry.Timestamp:F3},{entry.EventType},{entry.EventDetails}," +
-                                   $"{entry.TimeSinceLastAttack:F3}");
+                                   $"{entry.AttemptNumber},{entry.Timestamp:F3},{entry.EventType}," +
+                                   $"{entry.EventDetails},{entry.TimeSinceLastAttack:F3}");
                 }
             }
 
-            Debug.Log($"[DataLogger] Data saved successfully to: {filePath}");
-            Debug.Log($"[DataLogger] Total events logged: {logEntries.Count}");
+            Debug.Log($"[DataLogger] ✅ DATA SAVED SUCCESSFULLY");
+            Debug.Log($"[DataLogger] File: {fileName}");
+            Debug.Log($"[DataLogger] Path: {filePath}");
+            Debug.Log($"[DataLogger] Total events: {logEntries.Count}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[DataLogger] Failed to save data: {e.Message}");
+            Debug.LogError($"[DataLogger] ❌ FAILED TO SAVE: {e.Message}");
         }
     }
 
@@ -257,11 +336,11 @@ public class DataLogger : MonoBehaviour
     {
         logEntries.Clear();
         lastPlayerAttackTime = 0f;
+        lastAIAttackTime = 0f;
         sessionStartTime = Time.time;
         Debug.Log("[DataLogger] Logs cleared - Ready for new session");
     }
 
-    // Save data when application quits
     void OnApplicationQuit()
     {
         if (logEntries.Count > 0)
@@ -270,9 +349,9 @@ public class DataLogger : MonoBehaviour
         }
     }
 
-    // Optional: Manual save with key press (useful for testing)
     void Update()
     {
+        // Manual save with F9 (for testing)
         if (Input.GetKeyDown(KeyCode.F9))
         {
             SaveToCSV();

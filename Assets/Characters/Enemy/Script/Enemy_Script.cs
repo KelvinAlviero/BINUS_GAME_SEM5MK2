@@ -271,6 +271,8 @@ public class Enemy_Script : MonoBehaviour
         {
             float timeSurvived = Time.time - combatStartTime;
             DataLogger.Instance.LogAIDeath(timeSurvived);
+            DataLogger.Instance.EndCombat("PlayerVictory"); // ADD THIS LINE
+
             youWonText.SetActive(true);
             Invoke("Death", 0.01f);
         }

@@ -31,7 +31,13 @@ public class PauseMenu : MonoBehaviour
 
     public void RestartButton()
     {
-        Time.timeScale = 1f; // Reset time scale before loading
+        // Tell DataLogger we're starting a new attempt
+        if (DataLogger.Instance != null)
+        {
+            DataLogger.Instance.StartNewAttempt();
+        }
+
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

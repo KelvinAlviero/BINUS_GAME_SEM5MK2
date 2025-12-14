@@ -143,10 +143,12 @@ public class Player_Stats : MonoBehaviour
 
         if (playerCurrentHealth <= 0)
         {
+            DataLogger.Instance.LogPlayerDeath();
+            DataLogger.Instance.EndCombat("PlayerDefeat"); // ADD THIS LINE
+
             deathMenuGameObject.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            DataLogger.Instance.LogPlayerDeath();
             Invoke("Death", 0.01f);
         }
     }

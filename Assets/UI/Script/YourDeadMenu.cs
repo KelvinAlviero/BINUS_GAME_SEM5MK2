@@ -7,7 +7,13 @@ public class YourDeadMenu : MonoBehaviour
 
     public void RestartButton()
     {
-        Time.timeScale = 1f; // Reset time scale before loading
+        // Tell DataLogger we're starting a new attempt
+        if (DataLogger.Instance != null)
+        {
+            DataLogger.Instance.StartNewAttempt();
+        }
+
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         deathMenu.SetActive(false);
     }
@@ -21,7 +27,7 @@ public class YourDeadMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        deathMenu = transform.GetComponent<GameObject>();
+        deathMenu = gameObject;
     }
 
     // Update is called once per frame

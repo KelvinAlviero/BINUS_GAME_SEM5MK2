@@ -1027,7 +1027,7 @@ MonoBehaviour:
     m_Bits: 128
   youWonText: {fileID: 692563924}
   damageFlashVfx: {fileID: 232097379}
-  enemyHealth: 100
+  enemyHealth: 200
   attackRate: 0.5
   enemyWalkSpeed: 2.5
   enemyhp_BarGameObject: {fileID: 1391936677}
@@ -2825,7 +2825,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   participantID: P001
   aiType: Adaptive
-  sessionNumber: 1
+  sessionNumber: 2
+  attemptNumber: 1
 --- !u!4 &1056083793
 Transform:
   m_ObjectHideFlags: 0
