@@ -203,26 +203,30 @@ public class NeuralNetwork
         weights_input_hidden[13][0] = -1.0f;  // Close distance -> less movement
 
         // === HIDDEN NODE 1: DEFENSIVE PRESSURE (Only when player attacks) ===
-        weights_input_hidden[9][1] = 2.5f;    // Player attacking -> defensive pressure
-        weights_input_hidden[13][1] = 1.5f;   // Close distance -> more pressure
-        weights_input_hidden[4][1] = -1.0f;   // Player low health -> less pressure needed
+        weights_input_hidden[9][1] = 3.0f;    // Player attacking -> defensive pressure (INCREASED)
+        weights_input_hidden[13][1] = 2.0f;   // Close distance -> more pressure (INCREASED)
+        weights_input_hidden[4][1] = -1.5f;   // Player low health -> less pressure needed
 
         // === HIDDEN NODE 2: HEALTH-BASED DEFENSE (Blocks more when low health) ===
-        // INCREASED negative weight to create stronger contrast
-        weights_input_hidden[6][2] = -4.0f;   // ENEMY health -> defense (STRONGER negative = more when low)
-        weights_input_hidden[9][2] = 2.5f;    // Player attacking -> trigger defense
-        weights_input_hidden[13][2] = 1.2f;   // Close distance -> more defense
+        // MASSIVE negative weight for strong low-health blocking
+        weights_input_hidden[6][2] = -6.0f;   // ENEMY health -> defense (MASSIVE negative)
+        weights_input_hidden[9][2] = 3.0f;    // Player attacking -> trigger defense (INCREASED)
+        weights_input_hidden[13][2] = 2.0f;   // Close distance -> more defense (INCREASED)
+        weights_input_hidden[11][2] = -2.5f;  // Player jumping -> CAUGHT OFF GUARD
+        weights_input_hidden[3][2] = -1.5f;   // Fast horizontal movement (dash) -> less block
 
         // === HIDDEN NODE 3: HEALTH-BASED DODGE ===
-        // INCREASED negative weight for stronger health scaling
-        weights_input_hidden[6][3] = -3.5f;   // ENEMY health -> dodge (STRONGER negative = more when low)
-        weights_input_hidden[9][3] = 2.0f;    // Player attacking -> dodge
-        weights_input_hidden[8][3] = 1.5f;    // Player heavy attack -> dodge more
+        // MASSIVE negative weight for aggressive low-health dodging
+        weights_input_hidden[6][3] = -6.5f;   // ENEMY health -> dodge (MASSIVE negative)
+        weights_input_hidden[9][3] = 3.5f;    // Player attacking -> dodge (VERY STRONG)
+        weights_input_hidden[8][3] = 2.0f;    // Player heavy attack -> dodge more
+        weights_input_hidden[13][3] = 2.5f;   // Close distance -> MORE dodging
+        weights_input_hidden[11][3] = -1.0f;  // Player jumping -> slightly harder (caught off guard)
 
         // === HIDDEN NODE 4: MELEE AGGRESSION (More aggressive when healthy) ===
-        weights_input_hidden[6][4] = 2.5f;    // ENEMY health -> melee (positive = more when healthy)
+        weights_input_hidden[6][4] = 3.0f;    // ENEMY health -> melee (positive = more when healthy)
         weights_input_hidden[13][4] = 3.0f;   // Close distance -> melee
-        weights_input_hidden[10][4] = -1.5f;  // Player blocking -> less melee
+        weights_input_hidden[10][4] = -2.0f;  // Player blocking -> less melee (INCREASED penalty)
 
         // === HIDDEN NODE 5: RANGED & PURSUIT (For fleeing enemies) ===
         weights_input_hidden[11][5] = 2.5f;   // Player jumping -> use ranged!
@@ -231,13 +235,14 @@ public class NeuralNetwork
         weights_input_hidden[10][5] = 1.0f;   // Player blocking -> use ranged
 
         // === HIDDEN NODE 6: AGGRESSION CONTROL (High when healthy) ===
-        weights_input_hidden[6][6] = 3.0f;    // ENEMY health -> aggression (INCREASED positive = more when healthy)
-        weights_input_hidden[4][6] = -1.0f;   // Player low health -> finish them!
-        weights_input_hidden[5][6] = 0.8f;    // Player low stamina -> be aggressive
+        weights_input_hidden[6][6] = 3.5f;    // ENEMY health -> aggression (MORE positive)
+        weights_input_hidden[4][6] = -1.5f;   // Player low health -> finish them!
+        weights_input_hidden[5][6] = 1.0f;    // Player low stamina -> be aggressive
 
         // === HIDDEN NODE 7: URGENCY (When enemy is low health) ===
-        weights_input_hidden[6][7] = -3.5f;   // ENEMY low health -> urgent mode
-        weights_input_hidden[4][7] = 1.5f;    // Player also low health -> desperate
+        weights_input_hidden[6][7] = -4.5f;   // ENEMY low health -> urgent mode (STRONGER)
+        weights_input_hidden[4][7] = 2.0f;    // Player also low health -> desperate
+        weights_input_hidden[9][7] = 2.0f;    // Player attacking -> urgent response
 
         // =============== OUTPUT LAYER CONNECTIONS ===============
 
@@ -247,91 +252,110 @@ public class NeuralNetwork
         // Output 1: WalkLeft  
         weights_hidden_output[0][1] = -3.0f;  // Movement -> WalkLeft (inverse)
 
-        // Output 2: Block - REDUCED defensive pressure contribution
-        weights_hidden_output[1][2] = 1.0f;   // Defensive pressure -> Block (REDUCED from 2.0)
-        weights_hidden_output[2][2] = 3.5f;   // Health-based defense -> Block (MAIN SOURCE)
-        weights_hidden_output[7][2] = 2.0f;   // Urgency -> Block when low health
+        // Output 2: Block - STRONG connections for low health
+        weights_hidden_output[1][2] = 1.5f;   // Defensive pressure -> Block (INCREASED)
+        weights_hidden_output[2][2] = 4.5f;   // Health-based defense -> Block (VERY STRONG)
+        weights_hidden_output[7][2] = 3.0f;   // Urgency -> Block when low health (STRONG)
 
-        // Output 3: Dodge - REDUCED defensive pressure contribution
-        weights_hidden_output[1][3] = 0.8f;   // Defensive pressure -> Dodge (REDUCED from 1.5)
-        weights_hidden_output[3][3] = 3.0f;   // Health-based dodge -> Dodge (MAIN SOURCE)
-        weights_hidden_output[7][3] = 1.8f;   // Urgency -> Dodge when low health
+        // Output 3: Dodge - VERY STRONG connections for low health
+        weights_hidden_output[1][3] = 2.0f;   // Defensive pressure -> Dodge (INCREASED)
+        weights_hidden_output[3][3] = 5.5f;   // Health-based dodge -> Dodge (EXTREMELY STRONG)
+        weights_hidden_output[7][3] = 4.0f;   // Urgency -> Dodge when low health (VERY STRONG)
 
         // Output 4: Melee Attack
         weights_hidden_output[4][4] = 3.5f;   // Melee aggression -> Melee
-        weights_hidden_output[6][4] = 2.0f;   // Aggression control -> Melee (INCREASED)
-        weights_hidden_output[7][4] = -1.5f;  // Urgency -> Less melee when desperate
+        weights_hidden_output[6][4] = 2.5f;   // Aggression control -> Melee
+        weights_hidden_output[7][4] = -2.5f;  // Urgency -> MUCH less melee when desperate
 
         // Output 5: Ranged Attack
         weights_hidden_output[5][5] = 4.0f;   // Ranged & pursuit -> Ranged
-        weights_hidden_output[6][5] = 1.0f;   // Aggression control -> Ranged
-        weights_hidden_output[7][5] = 2.0f;   // Urgency -> More ranged when desperate
+        weights_hidden_output[6][5] = 1.5f;   // Aggression control -> Ranged
+        weights_hidden_output[7][5] = 2.5f;   // Urgency -> More ranged when desperate
 
         // ==================== BIASES ====================
 
-        // Hidden layer biases - ADJUSTED for better health scaling
+        // Hidden layer biases - ADJUSTED for aggressive low-health defense
         biases_hidden[0] = -0.3f;  // Movement (slight negative)
-        biases_hidden[1] = -1.2f;  // Defensive pressure (needs stronger signal now)
-        biases_hidden[2] = -1.5f;  // Health defense (MORE negative = only activates at lower health)
-        biases_hidden[3] = -1.5f;  // Dodge (MORE negative = only activates at lower health)
-        biases_hidden[4] = -1.2f;  // Melee (easier to activate when healthy)
+        biases_hidden[1] = -0.5f;  // Defensive pressure (EASIER TO ACTIVATE)
+        biases_hidden[2] = -0.8f;  // Health defense (EASIER TO ACTIVATE at low health)
+        biases_hidden[3] = -0.5f;  // Dodge (MUCH EASIER TO ACTIVATE)
+        biases_hidden[4] = -1.5f;  // Melee (harder when low health)
         biases_hidden[5] = -0.5f;  // Ranged (easier to activate)
-        biases_hidden[6] = 0.8f;   // Aggression (MORE positive = aggressive by default when healthy)
-        biases_hidden[7] = -2.5f;  // Urgency (only activates when VERY low health)
+        biases_hidden[6] = 1.0f;   // Aggression (positive = aggressive when healthy)
+        biases_hidden[7] = -1.8f;  // Urgency (EASIER TO ACTIVATE when low health)
 
         // Output layer biases
         biases_output[0] = 0.0f;   // WalkRight (neutral)
         biases_output[1] = 0.0f;   // WalkLeft (neutral)
-        biases_output[2] = -1.0f;  // Block (MORE negative = don't block without good reason)
-        biases_output[3] = -1.2f;  // Dodge (MORE negative = don't dodge without good reason)
-        biases_output[4] = -1.0f;  // Melee (less negative = easier to activate)
+        biases_output[2] = -1.8f;  // Block (negative but not too hard at low health)
+        biases_output[3] = -1.5f;  // Dodge (negative but EASIER than block)
+        biases_output[4] = -1.2f;  // Melee (moderate)
         biases_output[5] = -0.8f;  // Ranged (slightly negative)
 
-        Debug.Log("Neural network weights tuned for adaptive gameplay with strong health-based defense!");
+        Debug.Log("Neural network tuned! Features: Aggressive dodging/blocking at low HP + Surprise vulnerability");
     }
 
     public void AdjustBehaviorBasedOnHealth(float currentHealthPercent)
     {
-        // Dynamic adjustment - now with more aggressive thresholds
+        // Dynamic adjustment - EXTREME defensive behavior when low health
 
         if (currentHealthPercent < 0.25f)
         {
-            // CRITICAL health - maximum defense, minimal offense
-            weights_hidden_output[2][2] = 5.0f;  // VERY strong blocking
-            weights_hidden_output[3][3] = 4.5f;  // VERY strong dodging
-            weights_hidden_output[4][4] = 1.5f;  // Minimal melee
-            weights_hidden_output[5][5] = 3.5f;  // Prefer ranged
-            biases_hidden[7] = 0.5f;  // Urgency always active
-            biases_output[2] = -0.3f;  // Easier to trigger block
-            biases_output[3] = -0.5f;  // Easier to trigger dodge
+            // CRITICAL health - MAXIMUM dodge and block, survival mode
+            weights_hidden_output[2][2] = 7.0f;   // EXTREME blocking
+            weights_hidden_output[3][3] = 8.0f;   // EXTREME dodging (primary defense)
+            weights_hidden_output[4][4] = 0.5f;   // Almost no melee
+            weights_hidden_output[5][5] = 3.0f;   // Ranged only
+
+            biases_hidden[7] = 2.0f;   // Urgency ALWAYS active
+            biases_output[2] = 0.5f;   // Block triggers EASILY
+            biases_output[3] = 0.8f;   // Dodge triggers VERY EASILY
+            biases_output[4] = -3.0f;  // Melee almost impossible
+
+            Debug.Log("AI: CRITICAL HEALTH - Maximum defense mode!");
         }
         else if (currentHealthPercent < 0.40f)
         {
-            // LOW health - increased defense
-            weights_hidden_output[2][2] = 4.0f;  // Strong blocking
-            weights_hidden_output[3][3] = 3.5f;  // Strong dodging
-            weights_hidden_output[4][4] = 2.5f;  // Reduced melee
-            biases_output[2] = -0.6f;  // Slightly easier to block
-            biases_output[3] = -0.8f;  // Slightly easier to dodge
+            // LOW health - Very strong defense, dodge-focused
+            weights_hidden_output[2][2] = 6.0f;   // Very strong blocking
+            weights_hidden_output[3][3] = 7.0f;   // Very strong dodging
+            weights_hidden_output[4][4] = 1.5f;   // Minimal melee
+            weights_hidden_output[5][5] = 3.5f;   // Prefer ranged
+
+            biases_hidden[7] = 1.0f;   // Urgency active
+            biases_output[2] = 0.0f;   // Block easy to trigger
+            biases_output[3] = 0.2f;   // Dodge VERY easy to trigger
+            biases_output[4] = -2.0f;  // Melee very hard
+
+            Debug.Log("AI: LOW HEALTH - Strong defensive mode!");
         }
-        else if (currentHealthPercent < 0.65f)
+        else if (currentHealthPercent < 0.60f)
         {
-            // MEDIUM health - balanced but cautious
-            weights_hidden_output[2][2] = 3.5f;  // Moderate blocking
-            weights_hidden_output[3][3] = 3.0f;  // Moderate dodging
-            weights_hidden_output[4][4] = 3.0f;  // Moderate melee
-            biases_output[2] = -0.8f;  // Normal block threshold
-            biases_output[3] = -1.0f;  // Normal dodge threshold
+            // MEDIUM health - Balanced defense with dodge preference
+            weights_hidden_output[2][2] = 4.5f;   // Strong blocking
+            weights_hidden_output[3][3] = 5.5f;   // Stronger dodging
+            weights_hidden_output[4][4] = 2.5f;   // Reduced melee
+            weights_hidden_output[5][5] = 3.5f;   // Mixed ranged
+
+            biases_output[2] = -0.8f;  // Block moderate
+            biases_output[3] = -0.5f;  // Dodge easier
+            biases_output[4] = -1.5f;  // Melee reduced
+
+            Debug.Log("AI: MEDIUM HEALTH - Cautious mode!");
         }
         else
         {
-            // HIGH health (above 65%) - aggressive, minimal defense
-            weights_hidden_output[2][2] = 2.0f;  // WEAK blocking (rarely blocks)
-            weights_hidden_output[3][3] = 2.0f;  // WEAK dodging (rarely dodges)
-            weights_hidden_output[4][4] = 4.0f;  // STRONG melee aggression
-            weights_hidden_output[5][5] = 4.0f;  // STRONG ranged
-            biases_output[2] = -1.5f;  // Very hard to trigger block
-            biases_output[3] = -1.5f;  // Very hard to trigger dodge
+            // HIGH health (above 60%) - Aggressive, minimal defense
+            weights_hidden_output[2][2] = 1.5f;   // WEAK blocking
+            weights_hidden_output[3][3] = 2.0f;   // WEAK dodging
+            weights_hidden_output[4][4] = 4.5f;   // STRONG melee
+            weights_hidden_output[5][5] = 4.0f;   // STRONG ranged
+
+            biases_output[2] = -2.5f;  // Block VERY hard to trigger
+            biases_output[3] = -2.0f;  // Dodge hard to trigger
+            biases_output[4] = -0.5f;  // Melee easy to trigger
+
+            Debug.Log("AI: HIGH HEALTH - Aggressive mode!");
         }
 
         Debug.Log($"AI behavior adjusted for {currentHealthPercent * 100:F0}% health");

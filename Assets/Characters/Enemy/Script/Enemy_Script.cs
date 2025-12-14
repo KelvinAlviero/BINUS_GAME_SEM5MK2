@@ -60,6 +60,7 @@ public class Enemy_Script : MonoBehaviour
     public float bulletForce = 1f;
     public bool rangeAttack = false;
 
+
     private bool isFlipped = false;
     private HP_BarScript hp_BarScript;
     private float combatStartTime = 0f;
@@ -208,47 +209,45 @@ public class Enemy_Script : MonoBehaviour
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
             DataLogger.Instance.LogAIDamage(0f, "Avoided", distance);
-
-            //Debug.Log("<color=green>[DAMAGE AVOIDED] Enemy is invincible/dodging!</color>");
             return;
         }
 
-        // === NEURAL NETWORK DEFENSE MODE ===
+        // === NEURAL NETWORK DEFENSE MODE (Adaptive AI) ===
         if (!useRandomDefense)
         {
-            // Check if block is ACTIVE (not just the flag)
+            // Check if block is ACTIVE (set by Neural Network brain)
             if (IsBlockActive())
             {
                 float distance = Vector2.Distance(transform.position, player.transform.position);
                 DataLogger.Instance.LogAIBlock(distance, "Predictive");
-
                 BlockDamage(damage);
             }
             else
             {
-                //Debug.Log("<color=red>[FULL DAMAGE] No active defense</color>");
                 TakeFullDamage(damage);
             }
         }
-        // === RANDOM DEFENSE MODE ===
+        // === FINITE STATE MACHINE MODE (Traditional AI) ===
         else
         {
-            if (CheckForRandomDodging())
-            {
-                return;
-            }
+            // FSM blocking is controlled ONLY by the predictable pattern in Enemy_1_Run
+            // The state machine calls ActivateBlock() when the pattern dictates it
 
-            if (Random.value <= percentageBlocking && !isDodging)
+            if (IsBlockActive())
             {
+                // Block was activated by FSM pattern (e.g., "every 2nd attack when HP < 50%")
                 float distance = Vector2.Distance(transform.position, player.transform.position);
-                DataLogger.Instance.LogAIBlock(distance, "Reactive");
-
+                DataLogger.Instance.LogAIBlock(distance, "Pattern");
                 BlockDamage(damage);
             }
             else
             {
+                // No active block from pattern = take full damage
                 TakeFullDamage(damage);
             }
+
+            // NOTE: Random blocking/dodging removed for predictable FSM behavior
+            // Players should be able to learn and exploit the attack pattern
         }
 
         if (currentHealth <= 0)
@@ -256,16 +255,20 @@ public class Enemy_Script : MonoBehaviour
             float timeSurvived = Time.time - combatStartTime;
             DataLogger.Instance.LogAIDeath(timeSurvived);
             youWonText.SetActive(true);
-
             Invoke("Death", 0.01f);
         }
     }
 
+    // You can DELETE this method entirely for FSM mode
+    // Or keep it for future use but don't call it in FSM mode
     private bool CheckForRandomDodging()
     {
+        // This method is NO LONGER USED in FSM mode
+        // Dodging should also follow a predictable pattern if you want it at all
+
         if (PlayerIsAttacking &&
-        !isDodging &&
-        Time.time >= lastDodgeTime + dodgeCooldown)
+            !isDodging &&
+            Time.time >= lastDodgeTime + dodgeCooldown)
         {
             float distanceToPlayer = Vector2.Distance(player.transform.position, transform.position);
             if (distanceToPlayer <= 10f && Random.value <= percentageDodging)
