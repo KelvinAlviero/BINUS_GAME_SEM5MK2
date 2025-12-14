@@ -15,6 +15,10 @@ public class Enemy_brain : MonoBehaviour
     public NeuralNetwork neuralNet;
     private float[] inputNodes;
 
+    [Header("Adaptive Learning")]
+    public AdaptiveLearning adaptiveLearning; // NEW: Adaptive learning system
+    public bool enableAdaptiveLearning = true; // Toggle for research comparison
+
     [Header("Decision Settings")]
     public float decisionThreshold = 0.4f;
     public float detectionRange = 15f;
@@ -30,7 +34,7 @@ public class Enemy_brain : MonoBehaviour
 
     // *** NEW: Movement logging cooldown to prevent spam ***
     private float lastMovementLogTime = 0f;
-    private float movementLogCooldown = 0.3f; // Log movement every 0.3 seconds
+    private float movementLogCooldown = 0.3f;
 
     [Header("Debug")]
     public bool showDebugLogs = false;
@@ -50,6 +54,21 @@ public class Enemy_brain : MonoBehaviour
         else
         {
             Debug.LogError("Player not assigned to Enemy_brain!");
+        }
+
+        // NEW: Initialize adaptive learning if enabled
+        if (enableAdaptiveLearning)
+        {
+            adaptiveLearning = gameObject.AddComponent<AdaptiveLearning>();
+            adaptiveLearning.neuralNet = neuralNet;
+            adaptiveLearning.enemyBody = body;
+            adaptiveLearning.player = player;
+
+            Debug.Log("<color=cyan>[ADAPTIVE AI] Learning system initialized. AI will adapt to player behavior.</color>");
+        }
+        else
+        {
+            Debug.Log("<color=yellow>[STATIC AI] Adaptive learning disabled. Using fixed weights.</color>");
         }
     }
 
@@ -200,7 +219,6 @@ public class Enemy_brain : MonoBehaviour
         ExecuteAction(currentAction, distToPlayer);
     }
 
-    // *** UPDATED: Added logging for all decision switches ***
     private bool ShouldSwitchDecision(int newAction, float newConfidence, float distToPlayer)
     {
         // First decision
@@ -208,7 +226,6 @@ public class Enemy_brain : MonoBehaviour
         {
             if (newConfidence >= decisionThreshold)
             {
-                // Log the first decision
                 string[] actionNames = { "WalkRight", "WalkLeft", "Block", "Dodge", "Melee", "Ranged" };
                 DataLogger.Instance.LogAIDecision(actionNames[newAction], newConfidence, distToPlayer);
                 return true;
@@ -380,7 +397,6 @@ public class Enemy_brain : MonoBehaviour
         }
     }
 
-    // *** UPDATED: Added logging with cooldown ***
     private void MoveTowardPlayer()
     {
         if (enemyRb != null && player != null)
@@ -389,7 +405,6 @@ public class Enemy_brain : MonoBehaviour
             Vector2 enemyPos = transform.position;
             float direction = (playerPos.x > enemyPos.x) ? 1 : -1;
 
-            // Log movement with cooldown to prevent spam
             if (Time.time - lastMovementLogTime >= movementLogCooldown)
             {
                 float distance = Vector2.Distance(enemyPos, playerPos);
@@ -401,7 +416,6 @@ public class Enemy_brain : MonoBehaviour
         }
     }
 
-    // *** UPDATED: Added logging with cooldown ***
     private void MoveAwayFromPlayer()
     {
         if (enemyRb != null && player != null)
@@ -410,7 +424,6 @@ public class Enemy_brain : MonoBehaviour
             Vector2 enemyPos = transform.position;
             float direction = (enemyPos.x > playerPos.x) ? 1 : -1;
 
-            // Log movement with cooldown to prevent spam
             if (Time.time - lastMovementLogTime >= movementLogCooldown)
             {
                 float distance = Vector2.Distance(enemyPos, playerPos);
@@ -422,12 +435,10 @@ public class Enemy_brain : MonoBehaviour
         }
     }
 
-    // *** UPDATED: Added logging with cooldown ***
     private void StopMovement()
     {
         if (enemyRb != null)
         {
-            // Log movement with cooldown to prevent spam
             if (player != null && Time.time - lastMovementLogTime >= movementLogCooldown)
             {
                 float distance = Vector2.Distance(transform.position, player.transform.position);
@@ -439,12 +450,10 @@ public class Enemy_brain : MonoBehaviour
         }
     }
 
-    // *** UPDATED: Added logging with cooldown ***
     private void MoveEnemy(float direction)
     {
         if (enemyRb != null)
         {
-            // Log movement with cooldown to prevent spam
             if (player != null && Time.time - lastMovementLogTime >= movementLogCooldown)
             {
                 float distance = Vector2.Distance(transform.position, player.transform.position);
@@ -469,6 +478,13 @@ public class Enemy_brain : MonoBehaviour
         debug += $"Enemy State: Block={body.isBlocking} | Dodge={body.isDodging} | Invincible={body.enemyIsInvincible}\n";
         debug += $"CURRENT ACTION: {(currentAction >= 0 ? actionNames[currentAction] : "None")} (Confidence: {currentConfidence:F2})\n";
         debug += $"Time Since Decision: {Time.time - lastDecisionTime:F2}s | Cooldown: {decisionCooldown}s\n";
+
+        // NEW: Show adaptation status
+        if (enableAdaptiveLearning && adaptiveLearning != null)
+        {
+            debug += $"ADAPTIVE LEARNING: {(adaptiveLearning.hasAdapted ? "ADAPTED" : "Learning...")} | Adaptations: {adaptiveLearning.adaptationCount}\n";
+        }
+
         debug += "\nOUTPUTS:\n";
 
         for (int i = 0; i < outputs.Length; i++)

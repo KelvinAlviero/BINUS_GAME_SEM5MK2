@@ -173,6 +173,20 @@ public class DataLogger : MonoBehaviour
 
     // ==================== AI DECISION LOGGING (Neural Network) ====================
 
+    public void LogAdaptation(string adaptationType, float triggerValue, float distance)
+    {
+        string logEntry = $"{Time.time:F2},ADAPTATION,{adaptationType},{triggerValue:F3},{distance:F2}";
+        Debug.Log($"[DATA] {logEntry}");
+        // TODO: Write to your CSV/file
+    }
+
+    public void LogPlayerAction(string actionType, float distance)
+    {
+        string logEntry = $"{Time.time:F2},PLAYER_ACTION,{actionType},{distance:F2}";
+        Debug.Log($"[DATA] {logEntry}");
+        // TODO: Write to your CSV/file
+    }
+
     public void LogAIDecision(string actionName, float confidence, float distance = 0f)
     {
         string details = $"{actionName}|Conf:{confidence:F3}|Dist:{distance:F2}";

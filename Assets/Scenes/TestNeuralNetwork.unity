@@ -946,6 +946,8 @@ MonoBehaviour:
   body: {fileID: 232097375}
   player: {fileID: 990139473}
   spotter: {fileID: 990139475}
+  adaptiveLearning: {fileID: 0}
+  enableAdaptiveLearning: 1
   decisionThreshold: 0.5
   detectionRange: 15
   meleeRange: 3
@@ -1025,7 +1027,7 @@ MonoBehaviour:
     m_Bits: 128
   youWonText: {fileID: 692563924}
   damageFlashVfx: {fileID: 232097379}
-  enemyHealth: 50
+  enemyHealth: 100
   attackRate: 0.5
   enemyWalkSpeed: 2.5
   enemyhp_BarGameObject: {fileID: 1391936677}

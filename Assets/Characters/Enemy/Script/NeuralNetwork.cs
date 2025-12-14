@@ -7,14 +7,11 @@ public class NeuralNetwork
     private int hiddenSize;
     private int outputSize;
 
-    // Weights: connections between layers
-    // weights_input_hidden[i][j] = connection from input i to hidden j
-    private float[][] weights_input_hidden;
-    private float[][] weights_hidden_output;
-
-    // Biases: adjustment values for each neuron
-    private float[] biases_hidden;
-    private float[] biases_output;
+    // *** CHANGED TO PUBLIC for adaptive learning ***
+    public float[][] weights_input_hidden;
+    public float[][] weights_hidden_output;
+    public float[] biases_hidden;
+    public float[] biases_output;
 
     // Constructor: Set up the network structure
     public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes)

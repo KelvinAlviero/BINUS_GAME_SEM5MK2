@@ -2893,7 +2893,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   youWonText: {fileID: 692563924}
-  damageFlashVfx: {fileID: 0}
+  damageFlashVfx: {fileID: 990139483}
   enemyHealth: 200
   attackRate: 0.5
   enemyWalkSpeed: 2.5
@@ -4873,7 +4873,7 @@ PrefabInstance:
       objectReference: {fileID: 1997065970}
     - target: {fileID: 925905740412217336, guid: 9e07196c6ae15c1478b4b929725fe596, type: 3}
       propertyPath: attackDamage
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 925905740412217336, guid: 9e07196c6ae15c1478b4b929725fe596, type: 3}
       propertyPath: attackSoundEffect
@@ -4907,6 +4907,10 @@ PrefabInstance:
       propertyPath: hp_BarGameObject
       value: 
       objectReference: {fileID: 731465861}
+    - target: {fileID: 3796923320970214379, guid: 9e07196c6ae15c1478b4b929725fe596, type: 3}
+      propertyPath: staminaRegenRate
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3796923320970214379, guid: 9e07196c6ae15c1478b4b929725fe596, type: 3}
       propertyPath: staminaBlockDrain
       value: 60

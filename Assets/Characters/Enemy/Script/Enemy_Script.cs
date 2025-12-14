@@ -60,7 +60,7 @@ public class Enemy_Script : MonoBehaviour
     public float bulletForce = 1f;
     public bool rangeAttack = false;
 
-
+    private Enemy_brain brain;
     private bool isFlipped = false;
     private HP_BarScript hp_BarScript;
     private float combatStartTime = 0f;
@@ -82,6 +82,7 @@ public class Enemy_Script : MonoBehaviour
 
         combatStartTime = Time.time;
         DataLogger.Instance.LogCombatStart();
+        brain = GetComponent<Enemy_brain>();
     }
 
     public void Update()
@@ -171,7 +172,6 @@ public class Enemy_Script : MonoBehaviour
     {
         float distance = Vector2.Distance(transform.position, player.transform.position);
         AudioManager.instance.PlaySoundFXClip(shootSoundEffect, transform, 0.5f);
-        DataLogger.Instance.LogAIRangeAttack(distance);
 
         GameObject currentBullet = Instantiate(bullet, enemyRangeAttackPos.position, Quaternion.identity);
         Rigidbody2D bulletRigidBody = currentBullet.GetComponent<Rigidbody2D>();
@@ -181,6 +181,17 @@ public class Enemy_Script : MonoBehaviour
         currentBullet.transform.rotation = Quaternion.Euler(0, 0, angle);
 
         bulletRigidBody.AddForce(direction.normalized * bulletForce, ForceMode2D.Impulse);
+
+        // NEW: You'll need to track bullet hits separately via the bullet script
+        // For now, log the attempt
+        DataLogger.Instance.LogAIRangeAttack(distance);
+
+        if (brain != null && brain.enableAdaptiveLearning && brain.adaptiveLearning != null)
+        {
+            // Estimate hit based on distance (you can improve this with actual hit detection)
+            bool estimatedHit = distance <= 10f && !stats.isBlocking;
+            brain.adaptiveLearning.OnRangedAttempt(estimatedHit);
+        }
     }
 
     private void DealMeleeDamage(float meleeDamage)
@@ -195,6 +206,12 @@ public class Enemy_Script : MonoBehaviour
 
         bool hitPlayer = hitEnemies.Length > 0;
         DataLogger.Instance.LogAIMeleeAttack(hitPlayer, distance);
+
+        // NEW: Notify adaptive learning system
+        if (brain != null && brain.enableAdaptiveLearning && brain.adaptiveLearning != null)
+        {
+            brain.adaptiveLearning.OnMeleeAttempt(hitPlayer);
+        }
 
         foreach (Collider2D hit in hitEnemies)
         {
