@@ -10,6 +10,10 @@ public class Radiation : MonoBehaviour
     [Header("Snap Settings")]
     [Tooltip("Minimum damage required to risk snapping a DNA strand")]
     public float snapThreshold = 5.0f; 
+
+    [Header("Double Strand Settings")]
+    public float doubleStrandThreshold = 40.0f; // High damage requirement
+    [Range(0, 1)] public float doubleStrandChance = 0.3f; // 30% chance if threshold met
     
     [Tooltip("0 = 0% chance, 1 = 100% chance to snap if threshold met")]
     [Range(0, 1)] public float maxsnapChance = 1.0f; 
@@ -73,29 +77,35 @@ public class Radiation : MonoBehaviour
         // 1. Deal HP Damage
         TakeRadiationDamage(finalDamage);
 
-        // SNAP LOGIC  ---
-        
-        // Only run the risk if damage is high enough to matter
-        if (finalDamage > snapThreshold)
+        if (dnaManager != null)
         {
-            // Calculate the specific chance for THIS moment
-            // Example: If Intensity is 0.8 (Close), and MaxChance is 1.0
-            // Then current chance is 80%.
-            float currentSnapChance = intensity * maxsnapChance;
-            // Roll the dice (0.0 to 1.0)
-            float diceRoll = Random.value;
-            // Debug to see the math in action
-            // Debug.Log($"Risk: {currentSnapChance*100:F0}% (Rolled: {diceRoll:F2})");
-            if (diceRoll < currentSnapChance)
+            // 1. CHECK FOR DOUBLE STRAND BREAK (Critical Damage)
+            if (finalDamage >= doubleStrandThreshold)
             {
-                if (dnaManager != null)
+                // Roll for Critical Break
+                if (Random.value < doubleStrandChance)
+                {
+                    dnaManager.DamageDoubleStrand();
+                    Debug.Log($"<color=purple>RADIATION SPIKE!</color> Damage {finalDamage:F1} caused DSB!");
+                    return; // Return so we don't ALSO do a single break on the same tick
+                }
+            }
+
+            // 2. CHECK FOR SINGLE STRAND BREAK (Standard Damage)
+            // Only runs if we didn't just trigger a Double Break
+            if (finalDamage > snapThreshold)
+            {
+                // Scale chance by intensity as before
+                float currentSnapChance = intensity * maxsnapChance;
+                
+                if (Random.value < currentSnapChance)
                 {
                     dnaManager.DamageRandomStrand();
-                    Debug.Log($"<color=red>SNAP!</color> Distance: {distance:F1}m | Chance was: {currentSnapChance*100:F0}%");
                 }
             }
         }
-        Debug.Log($"-- {gameObject.name}: {finalDamage:F1} (Dist: {distance:F1}m) --");
+
+        Debug.Log($"-- {gameObject.name}: {finalDamage:F1} Damage --");
     }
 
     void TakeRadiationDamage(float finalDamage)

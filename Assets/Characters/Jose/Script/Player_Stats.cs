@@ -78,6 +78,32 @@ public class Player_Stats : MonoBehaviour
         }
     }
 
+    // Debuffs
+    public void ApplyGeneticDebuff(DNABaseType type)
+    {
+        switch (type)
+        {
+            case DNABaseType.Thymine:
+                // maxHealth -= 10;
+                Debug.Log("GENETIC TRAUMA: Max HP reduced by 10!");
+                break;
+
+            case DNABaseType.Adenine:
+                // maxStamina -= 50;
+                Debug.Log("GENETIC TRAUMA: Max Stamina reduced by 50!");
+                break;
+
+            case DNABaseType.Guanine:
+                // jumpHeight -= 1f;
+                Debug.Log("GENETIC TRAUMA: Jump Height reduced!");
+                break;
+
+            case DNABaseType.Cytosine:
+                // attackDamage -= 5;
+                Debug.Log("GENETIC TRAUMA: Muscle atrophy (Damage down)!");
+                break;
+        }
+    }
     void Awake()
     {
         damageFlashVfx = GetComponent<Entity_VFX>();

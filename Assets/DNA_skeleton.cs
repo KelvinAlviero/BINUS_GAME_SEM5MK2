@@ -2,8 +2,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+public enum DNABaseType 
+{ 
+    Adenine,  // Stamina
+    Thymine,  // HP
+    Guanine,  // Jump
+    Cytosine  // Attack
+}
+
 public class DNA_skeleton : MonoBehaviour
 {
+
     // Changed to CLASS so we can edit it easily in the list
     [System.Serializable]
     public class RungDefinition
@@ -12,12 +21,23 @@ public class DNA_skeleton : MonoBehaviour
         public GameObject leftBase;     // e.g., Adenine
         public GameObject rightBase;    // e.g., Thymine
 
+        [Header("Base Genetics")]
+        public DNABaseType leftBaseType;  // e.g. Adenine
+        public DNABaseType rightBaseType; // e.g. Thymine
+
         // CHANGE: Now we look for UI Images, not SpriteRenderers
         public Image[] connectors;
         // The Sprites
         public Sprite healthySprite;
         public Sprite damagedSprite;
+        public Sprite greyedOutSprite; // dead sprite
+
+        public bool isDead = false;
     }
+
+    [Header("Repair System")]
+    public GameObject repairButtonPrefab; // Drag your Button Prefab here!
+    public Transform repairButtonContainer; // Assign your Canvas/Panel here
 
     public List<RungDefinition> dnaTable = new List<RungDefinition>();
 
@@ -78,38 +98,105 @@ public class DNA_skeleton : MonoBehaviour
     {
         if (dnaTable.Count == 0) return;
 
+        int rowIndex = Random.Range(0, dnaTable.Count);
+        RungDefinition row = dnaTable[rowIndex];
+
+        if (row.isDead) return; // Don't beat a dead horse
+
+        if (row.connectors == null || row.connectors.Length == 0) return;
+
+        int connectorIndex = Random.Range(0, row.connectors.Length);
+        Image targetStrand = row.connectors[connectorIndex];
+
+        // LOGIC: Is this connector currently healthy?
+        if (targetStrand != null && targetStrand.sprite == row.healthySprite)
+        {
+            // 1. Visual Snap
+            targetStrand.sprite = row.damagedSprite;
+            targetStrand.color = Color.white;
+
+            // 2. Decide: Did we hurt the Left Base or Right Base?
+            // (For now, let's flip a coin. 50/50 chance which base is at risk)
+            DNABaseType victimBase = (Random.value > 0.5f) ? row.rightBaseType : row.leftBaseType;
+
+            Debug.Log($"<color=red>SNAP!</color> {row.name} broken. Risking {victimBase}...");
+
+            // 3. Spawn Repair Button
+            SpawnRepairButton(targetStrand, row, victimBase);
+        }
+    }
+
+    void SpawnRepairButton(Image connector, RungDefinition row, DNABaseType victim)
+    {
+        if (repairButtonPrefab == null) return;
+
+        // Instantiate the button
+        GameObject btnObj = Instantiate(repairButtonPrefab, repairButtonContainer);
+        
+        // Position it over the broken connector
+        btnObj.transform.position = connector.transform.position;
+
+        // Initialize the script
+        RepairNode node = btnObj.GetComponent<RepairNode>();
+        if (node != null)
+        {
+            node.Initialize(victim, connector, row.healthySprite, row.greyedOutSprite);
+        }
+    }
+
+    // --- DOUBLE STRAND BREAK LOGIC ---
+    public void DamageDoubleStrand()
+    {
+        if (dnaTable.Count == 0) return;
+
         // 1. Pick a Random Row
         int randomIndex = Random.Range(0, dnaTable.Count);
         RungDefinition row = dnaTable[randomIndex];
 
-        // Safety Check: Does this row have connectors?
-        if (row.connectors == null || row.connectors.Length == 0)
+        // Safety: We need at least 2 connectors to have a "Double" break next to each other
+        if (row.connectors == null || row.connectors.Length < 2)
         {
-            Debug.LogWarning($"Tried to damage {row.name}, but it has no connectors!");
+            // Fallback: If there's only 1 connector, just break that one
+            Debug.LogWarning($"Row {row.name} only has 1 connector, doing single break instead.");
+            DamageRandomStrand(); 
             return;
         }
 
-        // 2. Pick a Random Connector within that row (The "Single Strand" logic)
-        int randomConnectorIndex = Random.Range(0, row.connectors.Length);
-        Image targetStrand = row.connectors[randomConnectorIndex];
+        // 2. Logic: Pick a start index that allows for a neighbor
+        // If length is 2, we must pick index 0 (so we break 0 and 1).
+        // If length is 3, we can pick 0 (0,1) or 1 (1,2).
+        int maxStartIndex = row.connectors.Length - 1; 
+        int firstIndex = Random.Range(0, maxStartIndex); // Random 0 to Length-2
+        int secondIndex = firstIndex + 1; // The neighbor "right next to it"
 
-        // 3. Apply the Damage Visuals ONLY to that one strand
-        if (targetStrand != null && row.damagedSprite != null)
+        // 3. Apply Damage to BOTH
+        Image connectorA = row.connectors[firstIndex];
+        Image connectorB = row.connectors[secondIndex];
+
+        bool snappedSomething = false;
+
+        // Break A
+        if (connectorA != null && row.damagedSprite != null)
         {
-            // Check if it's already damaged to avoid redundant logs
-            if (targetStrand.sprite == row.damagedSprite)
-            {
-                Debug.Log($"<color=orange>Refused:</color> {row.name} strand {randomConnectorIndex} is already broken!");
-                return;
-            }
+            connectorA.sprite = row.damagedSprite;
+            connectorA.color = Color.white;
+            snappedSomething = true;
+        }
 
-            targetStrand.sprite = row.damagedSprite;
-            targetStrand.color = Color.white; // Ensure it's visible
+        // Break B (The neighbor)
+        if (connectorB != null && row.damagedSprite != null)
+        {
+            connectorB.sprite = row.damagedSprite;
+            connectorB.color = Color.white;
+            snappedSomething = true;
+        }
 
-            Debug.Log($"<color=red>SNAP!</color> {row.name} :: Connector {randomConnectorIndex} broke.");
+        if (snappedSomething)
+        {
+            Debug.Log($"<color=purple>CRITICAL:</color> Double Strand Break on {row.name}! (Connectors {firstIndex} & {secondIndex})");
         }
     }
-
+    
     // --- TEST BUTTON ---
     // Right-click the component and select "TEST: Random Damage"
     [ContextMenu("TEST: Random Damage")]
@@ -118,6 +205,13 @@ public class DNA_skeleton : MonoBehaviour
         DamageRandomStrand();
     }
     
+    // Test Button
+    [ContextMenu("TEST: Double Strand Break")]
+    public void TestDSB()
+    {
+        DamageDoubleStrand();
+    }
+
     // Helper to reset everything (Optional, handy for testing)
     [ContextMenu("TEST: Reset All")]
     public void ResetAll()
