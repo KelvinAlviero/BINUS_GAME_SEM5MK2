@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: c2f2086de055fbe4387ece0edf66fdaa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -873622866929017812
+    second: BINUS_PM_GameMenu (3)-Sheet_0
+  - first:
+      213: 3729223408486497167
+    second: BINUS_PM_GameMenu (3)-Sheet_1
+  - first:
+      213: 2415248814184786292
+    second: BINUS_PM_GameMenu (3)-Sheet_2
+  - first:
+      213: 8126774673463038550
+    second: BINUS_PM_GameMenu (3)-Sheet_3
+  - first:
+      213: -6691827696814681280
+    second: BINUS_PM_GameMenu (3)-Sheet_4
+  - first:
+      213: -6510341681723349044
+    second: BINUS_PM_GameMenu (3)-Sheet_5
+  - first:
+      213: 6083500261406809921
+    second: BINUS_PM_GameMenu (3)-Sheet_6
+  - first:
+      213: 6206079679836746822
+    second: BINUS_PM_GameMenu (3)-Sheet_7
+  - first:
+      213: 6584991504030981561
+    second: BINUS_PM_GameMenu (3)-Sheet_8
+  - first:
+      213: -5685228578394365896
+    second: BINUS_PM_GameMenu (3)-Sheet_9
+  - first:
+      213: -6942756937344652300
+    second: BINUS_PM_GameMenu (3)-Sheet_10
+  - first:
+      213: -6891651987582268148
+    second: BINUS_PM_GameMenu (3)-Sheet_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2c990591a440e3f0800000000000000
+      internalID: -873622866929017812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 1330
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8bb8e68eecd0c330800000000000000
+      internalID: 3729223408486497167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 2660
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 479eaadffffa48120800000000000000
+      internalID: 2415248814184786292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 3990
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 652d76d028a18c070800000000000000
+      internalID: 8126774673463038550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 5320
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0439d312a2ad123a0800000000000000
+      internalID: -6691827696814681280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 6650
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc7e576dbbe96a5a0800000000000000
+      internalID: -6510341681723349044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 7980
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14f1628814fec6450800000000000000
+      internalID: 6083500261406809921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 9310
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 644707c669c602650800000000000000
+      internalID: 6206079679836746822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 10640
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bd5bb652e6926b50800000000000000
+      internalID: 6584991504030981561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 11970
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 830a7e5cab20a11b0800000000000000
+      internalID: -5685228578394365896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 13300
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fb61bb895f56af90800000000000000
+      internalID: -6942756937344652300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BINUS_PM_GameMenu (3)-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 14630
+        y: 0
+        width: 1280
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0d4b84e70feb50a0800000000000000
+      internalID: -6891651987582268148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 3aeeed9ad33fbf94687b30566f5d8003
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      BINUS_PM_GameMenu (3)-Sheet_0: -873622866929017812
+      BINUS_PM_GameMenu (3)-Sheet_1: 3729223408486497167
+      BINUS_PM_GameMenu (3)-Sheet_10: -6942756937344652300
+      BINUS_PM_GameMenu (3)-Sheet_11: -6891651987582268148
+      BINUS_PM_GameMenu (3)-Sheet_2: 2415248814184786292
+      BINUS_PM_GameMenu (3)-Sheet_3: 8126774673463038550
+      BINUS_PM_GameMenu (3)-Sheet_4: -6691827696814681280
+      BINUS_PM_GameMenu (3)-Sheet_5: -6510341681723349044
+      BINUS_PM_GameMenu (3)-Sheet_6: 6083500261406809921
+      BINUS_PM_GameMenu (3)-Sheet_7: 6206079679836746822
+      BINUS_PM_GameMenu (3)-Sheet_8: 6584991504030981561
+      BINUS_PM_GameMenu (3)-Sheet_9: -5685228578394365896
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
