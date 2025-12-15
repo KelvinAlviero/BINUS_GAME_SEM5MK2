@@ -2825,8 +2825,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   participantID: P001
   aiType: Adaptive
-  sessionNumber: 2
-  attemptNumber: 1
+  sessionNumber: 0
+  attemptNumber: 0
 --- !u!4 &1056083793
 Transform:
   m_ObjectHideFlags: 0

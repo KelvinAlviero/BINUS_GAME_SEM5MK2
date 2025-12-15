@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    private bool isPaused = false;
 
     void Start()
     {
@@ -19,23 +18,18 @@ public class PauseMenu : MonoBehaviour
     {
 
         Time.timeScale = 0f; // Freeze the game
-        isPaused = true;
     }
 
     public void ResumeGame()
     {
 
         Time.timeScale = 1f; // Resume normal time
-        isPaused = false;
+     
     }
 
     public void RestartButton()
     {
-        // Tell DataLogger we're starting a new attempt
-        if (DataLogger.Instance != null)
-        {
-            DataLogger.Instance.StartNewAttempt();
-        }
+        
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

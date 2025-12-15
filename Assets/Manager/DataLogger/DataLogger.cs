@@ -11,14 +11,18 @@ public class DataLogger : MonoBehaviour
     [Header("Session Settings")]
     public string participantID = "P001";
     public string aiType = "Traditional"; // "Traditional" or "Adaptive"
-    public int sessionNumber = 1;
-    public int attemptNumber = 1; // Track attempts within same AI type
+    public int sessionNumber = 0;
+    public int attemptNumber = 1;
 
     private List<LogEntry> logEntries = new List<LogEntry>();
     private float sessionStartTime;
     private float lastPlayerAttackTime = 0f;
     private float lastAIAttackTime = 0f;
     private float combatStartTime = 0f;
+
+    // NEW: Track previous scene to detect restarts vs new sessions
+    private string previousSceneName = "";
+    private string currentAIScene = "";
 
     [System.Serializable]
     public class LogEntry
@@ -75,6 +79,7 @@ public class DataLogger : MonoBehaviour
         // Skip if it's the main menu or non-gameplay scene
         if (scene.name == "MainMenu" || scene.name.Contains("Menu"))
         {
+            previousSceneName = scene.name;
             Debug.Log($"[DataLogger] Menu scene loaded, skipping session setup");
             return;
         }
@@ -85,24 +90,44 @@ public class DataLogger : MonoBehaviour
             SaveToCSV();
         }
 
-        // Detect AI type from scene name and set session number
-        if (scene.name.Contains("Neural") || scene.name.Contains("Adaptive"))
+        // Check if this is a restart (same scene) or new session (different scene)
+        bool isRestart = (scene.name == currentAIScene && currentAIScene != "");
+
+        if (isRestart)
         {
-            aiType = "Adaptive";
-            sessionNumber = 2;
+            // RESTART within same session - increment attempt number
+            Debug.Log($"[DataLogger] RESTART DETECTED - Same scene: {scene.name}");
+            StartNewAttempt();
         }
-        else if (scene.name.Contains("State") || scene.name.Contains("Traditional"))
+        else
         {
-            aiType = "Traditional";
-            sessionNumber = 1;
+            // NEW SESSION - different scene or first load
+            Debug.Log($"[DataLogger] NEW SESSION - Scene changed from '{previousSceneName}' to '{scene.name}'");
+
+            // Detect AI type from scene name
+            if (scene.name.Contains("Neural") || scene.name.Contains("Adaptive"))
+            {
+                aiType = "Adaptive";
+            }
+            else if (scene.name.Contains("State") || scene.name.Contains("Traditional"))
+            {
+                aiType = "Traditional";
+            }
+
+            // Increment session number for new gameplay session
+            sessionNumber++;
+
+            // Reset for new session
+            ClearLogs();
+            attemptNumber = 1;
+            sessionStartTime = Time.time;
+
+            Debug.Log($"[DataLogger] NEW SESSION - AI: {aiType} | Session: {sessionNumber}");
         }
 
-        // Start fresh session
-        ClearLogs();
-        attemptNumber = 1; // Reset attempt counter for new scene
-        sessionStartTime = Time.time;
-
-        Debug.Log($"[DataLogger] NEW SESSION - Scene: {scene.name} | AI: {aiType} | Session: {sessionNumber}");
+        // Update tracking variables
+        currentAIScene = scene.name;
+        previousSceneName = scene.name;
     }
 
     void Start()
@@ -262,14 +287,19 @@ public class DataLogger : MonoBehaviour
 
     public void StartNewAttempt()
     {
-        // Don't clear logs - just increment attempt number for new try
+        // Increment attempt number for retry
         attemptNumber++;
+
+        // Reset timers but keep session data
         sessionStartTime = Time.time;
         lastPlayerAttackTime = 0f;
         lastAIAttackTime = 0f;
 
+        // Clear previous attempt's logs
+        ClearLogs();
+
         Debug.Log($"[DataLogger] ----------------------------------------");
-        Debug.Log($"[DataLogger] NEW ATTEMPT #{attemptNumber} - AI: {aiType}");
+        Debug.Log($"[DataLogger] NEW ATTEMPT #{attemptNumber} - AI: {aiType} | Session: {sessionNumber}");
         Debug.Log($"[DataLogger] ----------------------------------------");
     }
 
@@ -302,7 +332,7 @@ public class DataLogger : MonoBehaviour
         }
 
         string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-        string fileName = $"GameplayData_{participantID}_{aiType}_Session{sessionNumber}_{timestamp}.csv";
+        string fileName = $"GameplayData_{participantID}_{aiType}_S{sessionNumber}_A{attemptNumber}_{timestamp}.csv";
         string filePath = Path.Combine(Application.persistentDataPath, fileName);
 
         try
@@ -338,7 +368,7 @@ public class DataLogger : MonoBehaviour
         lastPlayerAttackTime = 0f;
         lastAIAttackTime = 0f;
         sessionStartTime = Time.time;
-        Debug.Log("[DataLogger] Logs cleared - Ready for new session");
+        Debug.Log("[DataLogger] Logs cleared - Ready for new attempt");
     }
 
     void OnApplicationQuit()

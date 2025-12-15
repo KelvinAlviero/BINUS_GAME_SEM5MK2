@@ -4719,6 +4719,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1790006380265356023, guid: b0c98eb03db2ed24187f349302515206, type: 3}
+      propertyPath: attemptNumber
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4630746882141022324, guid: b0c98eb03db2ed24187f349302515206, type: 3}
       propertyPath: m_Name
       value: DataLogger

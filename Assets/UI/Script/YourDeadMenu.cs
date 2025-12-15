@@ -7,11 +7,7 @@ public class YourDeadMenu : MonoBehaviour
 
     public void RestartButton()
     {
-        // Tell DataLogger we're starting a new attempt
-        if (DataLogger.Instance != null)
-        {
-            DataLogger.Instance.StartNewAttempt();
-        }
+        
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   participantID: P001
   aiType: Traditional
-  sessionNumber: 1
+  sessionNumber: 0
   attemptNumber: 1

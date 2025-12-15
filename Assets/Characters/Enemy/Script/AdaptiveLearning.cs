@@ -38,7 +38,7 @@ public class AdaptiveLearning : MonoBehaviour
     private int dashAttacks = 0;
     private int groundAttacks = 0;
     private int playerBlocks = 0;
-    private int playerDodges = 0;
+    //private int playerDodges = 0;
 
     // AI action tracking
     private int blockAttempts = 0;

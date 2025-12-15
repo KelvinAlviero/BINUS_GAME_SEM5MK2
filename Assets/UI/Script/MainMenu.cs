@@ -117,10 +117,6 @@ public class MainMenu : MonoBehaviour
     public void OnExitClick()
     {
         Application.Quit();
-
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
     }
 
     // Helper method to check if ID is set before loading scenes
