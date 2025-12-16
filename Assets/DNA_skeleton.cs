@@ -22,15 +22,18 @@ public class DNA_skeleton : MonoBehaviour
         public GameObject rightBase;    // e.g., Thymine
 
         [Header("Base Genetics")]
-        public DNABaseType leftBaseType;  // e.g. Adenine
-        public DNABaseType rightBaseType; // e.g. Thymine
-
+        public DNABaseType leftBaseType; 
+        public GameObject leftBaseObj; // The GameObject for the Left Icon
+        
+        public DNABaseType rightBaseType;
+        public GameObject rightBaseObj; // The GameObject for the Right Icon
         // CHANGE: Now we look for UI Images, not SpriteRenderers
         public Image[] connectors;
         // The Sprites
         public Sprite healthySprite;
         public Sprite damagedSprite;
         public Sprite greyedOutSprite; // dead sprite
+        public Sprite deadBaseSprite;
 
         public bool isDead = false;
     }
@@ -101,48 +104,79 @@ public class DNA_skeleton : MonoBehaviour
         int rowIndex = Random.Range(0, dnaTable.Count);
         RungDefinition row = dnaTable[rowIndex];
 
-        if (row.isDead) return; // Don't beat a dead horse
-
+        if (row.isDead) return;
         if (row.connectors == null || row.connectors.Length == 0) return;
 
+        // Pick a specific connector to break
         int connectorIndex = Random.Range(0, row.connectors.Length);
         Image targetStrand = row.connectors[connectorIndex];
 
-        // LOGIC: Is this connector currently healthy?
+        // Only proceed if it's currently healthy
         if (targetStrand != null && targetStrand.sprite == row.healthySprite)
         {
-            // 1. Visual Snap
+            // Visual snap
             targetStrand.sprite = row.damagedSprite;
             targetStrand.color = Color.white;
 
-            // 2. Decide: Did we hurt the Left Base or Right Base?
-            // (For now, let's flip a coin. 50/50 chance which base is at risk)
-            DNABaseType victimBase = (Random.value > 0.5f) ? row.rightBaseType : row.leftBaseType;
+            // --- THE FIX: CALCULATE PROXIMITY ---
+            // We verify which "half" of the bridge this connector belongs to.
+            
+            bool isLeftVictim = false;
 
-            Debug.Log($"<color=red>SNAP!</color> {row.name} broken. Risking {victimBase}...");
+            if (row.connectors.Length == 1)
+            {
+                // If there is only 1 connector, it touches both sides.
+                // We fall back to random (or you can default to Left if you prefer)
+                isLeftVictim = (Random.value > 0.5f);
+            }
+            else
+            {
+                // If we have 2+ connectors (e.g., Index 0 and 1)
+                // Length is 2. Midpoint is 1.0.
+                // Index 0 is < 1.0 (Left). Index 1 is >= 1.0 (Right).
+                float midpoint = row.connectors.Length / 2f;
+                
+                isLeftVictim = (connectorIndex < midpoint);
+            }
 
-            // 3. Spawn Repair Button
-            SpawnRepairButton(targetStrand, row, victimBase);
+            DNABaseType victimType = isLeftVictim ? row.leftBaseType : row.rightBaseType;
+            GameObject victimObj = isLeftVictim ? row.leftBaseObj : row.rightBaseObj;
+
+            // Get the image component
+            Image baseImage = victimObj.GetComponent<Image>();
+            
+            if (baseImage == null)
+            {
+                Debug.LogError($"[Error] No Image component found on {victimObj.name}!");
+                return;
+            }
+
+            Debug.Log($"<color=red>SNAP!</color> Connector {connectorIndex} broke. Nearest Base: {victimType}");
+
+            // Spawn the repair button
+            SpawnRepairButton(targetStrand, baseImage, row, victimType);
         }
     }
 
-    void SpawnRepairButton(Image connector, RungDefinition row, DNABaseType victim)
+    void SpawnRepairButton(Image connector, Image baseTarget, RungDefinition row, DNABaseType victim)
     {
         if (repairButtonPrefab == null) return;
 
-        // Instantiate the button
         GameObject btnObj = Instantiate(repairButtonPrefab, repairButtonContainer);
         
-        // Position it over the broken connector
+        btnObj.transform.SetAsLastSibling();
+        
+        // Position button over the CONNECTOR (so player knows where to click)
         btnObj.transform.position = connector.transform.position;
 
-        // Initialize the script
         RepairNode node = btnObj.GetComponent<RepairNode>();
         if (node != null)
         {
-            node.Initialize(victim, connector, row.healthySprite, row.greyedOutSprite);
+            // PASS THE BASE IMAGE, NOT THE CONNECTOR IMAGE for the "Death" target
+            node.Initialize(victim, connector, baseTarget, row.healthySprite, row.deadBaseSprite);
         }
     }
+
 
     // --- DOUBLE STRAND BREAK LOGIC ---
     public void DamageDoubleStrand()

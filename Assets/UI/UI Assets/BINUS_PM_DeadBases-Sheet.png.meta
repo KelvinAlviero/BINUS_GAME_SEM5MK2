@@ -58,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -93,9 +93,9 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
+    maxTextureSize: 16384
+    resizeAlgorithm: 1
+    textureFormat: 4
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -309,7 +309,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BINUS_PM_DeadBases-Sheet_0: -7973228361977433055
+      BINUS_PM_DeadBases-Sheet_1: -7787959473462442143
+      BINUS_PM_DeadBases-Sheet_2: 7745922554221799632
+      BINUS_PM_DeadBases-Sheet_3: -6407219990131967751
+      BINUS_PM_DeadBases-Sheet_4: -2270921245589199533
+      BINUS_PM_DeadBases-Sheet_5: 7374653261889633286
+      BINUS_PM_DeadBases-Sheet_6: -5871243173749693572
+      BINUS_PM_DeadBases-Sheet_7: 7282082618262569539
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

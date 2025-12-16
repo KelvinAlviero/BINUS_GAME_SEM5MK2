@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player_Input : MonoBehaviour
 {
@@ -13,11 +14,12 @@ public class Player_Input : MonoBehaviour
     private bool isInventoryOpen = false;
     private bool isPauseMenuOpen = false;
 
+    private bool IsPointerOverUI => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
         pauseMenuScript = playerPauseMenuUI.GetComponent<PauseMenu>();
         playerAttackScript = GetComponent<Player_Attack>();
         playerMovementScript = GetComponent<Player_Movement>();
@@ -37,9 +39,13 @@ public class Player_Input : MonoBehaviour
             GetAttackInput();
             GetToggleInventoryInput();
         }
-       
     }
+       
+       
+        // A clear, private property to check UI state
+    
 
+        
     private void GetBlockingInput()
     {
         if (Input.GetMouseButton(1))
@@ -107,14 +113,12 @@ public class Player_Input : MonoBehaviour
         if (isPauseMenuOpen)
         {
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
             playerPauseMenuUI.SetActive(true);
             pauseMenuScript.PauseGame();
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.None;
             playerPauseMenuUI.SetActive(false);
             pauseMenuScript.ResumeGame();
         }

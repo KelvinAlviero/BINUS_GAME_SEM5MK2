@@ -84,23 +84,23 @@ public class Player_Stats : MonoBehaviour
         switch (type)
         {
             case DNABaseType.Thymine:
-                // maxHealth -= 10;
-                Debug.Log("GENETIC TRAUMA: Max HP reduced by 10!");
+                playerMaxHealth -= 30;
+                Debug.Log("GENETIC TRAUMA: Max HP reduced by 30!");
                 break;
 
             case DNABaseType.Adenine:
-                // maxStamina -= 50;
+                playerMaxStamina -= 50;
                 Debug.Log("GENETIC TRAUMA: Max Stamina reduced by 50!");
                 break;
 
             case DNABaseType.Guanine:
-                // jumpHeight -= 1f;
-                Debug.Log("GENETIC TRAUMA: Jump Height reduced!");
+                staminaBlockDrain -= 1f;
+                Debug.Log("GENETIC TRAUMA: Block Drain Increased!");
                 break;
 
             case DNABaseType.Cytosine:
-                // attackDamage -= 5;
-                Debug.Log("GENETIC TRAUMA: Muscle atrophy (Damage down)!");
+                staminaRegenRate -= 5;
+                Debug.Log("GENETIC TRAUMA: LowerStaminaRegen)!");
                 break;
         }
     }
@@ -174,7 +174,6 @@ public class Player_Stats : MonoBehaviour
 
             deathMenuGameObject.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
             Invoke("Death", 0.01f);
         }
     }

@@ -7,31 +7,32 @@ public class RepairNode : MonoBehaviour
     [Header("Settings")]
     public float timeToFailure = 30f;
     
-    // Internal Data (Assigned by DNAStructure when spawned)
     private DNABaseType affectedBase;
-    private Image connectorImage;
-    private Sprite fixedSprite;
-    private Sprite deadSprite; // The "Greyed Out" sprite
-    private Player_Stats statsScript;
     
+    private Image connectorImage; // The ladder rung (to fix if we succeed)
+    private Image baseImage;      // The A/T/G/C icon (to kill if we fail)
+    
+    private Sprite fixedConnectorSprite;
+    private Sprite deadBaseSprite;
+    
+    private Player_Stats statsScript;
     private bool isActive = false;
-    private Button myButton;
 
     void Awake()
     {
-        myButton = GetComponent<Button>();
-        myButton.onClick.AddListener(OnRepairClicked);
+        GetComponent<Button>().onClick.AddListener(OnRepairClicked);
         statsScript = FindObjectOfType<Player_Stats>();
     }
 
-    public void Initialize(DNABaseType _base, Image _connector, Sprite _fixed, Sprite _dead)
+    // UPDATED INITIALIZE FUNCTION
+    public void Initialize(DNABaseType _base, Image _connector, Image _baseTarget, Sprite _fixed, Sprite _dead)
     {
         affectedBase = _base;
         connectorImage = _connector;
-        fixedSprite = _fixed;
-        deadSprite = _dead;
+        baseImage = _baseTarget;         // Save the Base Image
+        fixedConnectorSprite = _fixed;
+        deadBaseSprite = _dead;          // Save the Grey Base Sprite
 
-        // Start timer
         isActive = true;
         gameObject.SetActive(true);
         StartCoroutine(CountdownToFailure());
@@ -40,61 +41,53 @@ public class RepairNode : MonoBehaviour
     IEnumerator CountdownToFailure()
     {
         float timer = timeToFailure;
-        
         while (timer > 0 && isActive)
         {
             timer -= Time.deltaTime;
-            // Optional: Make the button flash faster as time runs out?
             yield return null;
         }
-
-        if (isActive)
-        {
-            FailRepair();
-        }
-    }
-
+        if (isActive) FailRepair();
+    }     
     void OnRepairClicked()
     {
         if (!isActive) return;
 
-        // SUCCESS: Repair the strand
-        isActive = false;
+        // INSTEAD of fixing it here, we launch the surgery!
+        SurgeryManager surgery = FindObjectOfType<SurgeryManager>();
         
-        // 1. Visually fix the connector
-        if (connectorImage != null && fixedSprite != null)
+        if (surgery != null)
         {
-            connectorImage.sprite = fixedSprite;
-            connectorImage.color = Color.white;
+            // Pass the data so the surgery knows what we are fixing
+            // (You might want to instantiate specific prefabs based on the base type A/T/G/C later)
+            surgery.microscopePanel.SetActive(true);
+            surgery.currentPhase = SurgeryManager.SurgeryPhase.Extraction;
+            // You'll need to spawn a fresh "Broken Piece" here in the surgery script
         }
-
-        Debug.Log($"<color=green>SAVED!</color> {affectedBase} strand repaired in time.");
         
-        // Destroy this button (job done)
-        Destroy(gameObject);
+        // Pause the timer on this node while surgery happens? 
+        // Or let the panic continue? (Letting it continue is more horror!)
     }
 
     void FailRepair()
     {
         isActive = false;
 
-        // FAILURE: Apply Penalty
-        Debug.Log($"<color=red>FAILURE!</color> {affectedBase} connection died!");
+        Debug.Log($"<color=red>FAILURE!</color> {affectedBase} died!");
 
-        // 1. Turn the connector Grey/Dead
-        if (connectorImage != null && deadSprite != null)
+        // FAILURE: Target the BASE IMAGE now
+        if (baseImage != null && deadBaseSprite != null)
         {
-            connectorImage.sprite = deadSprite; // The "Grey" sprite
-            connectorImage.color = Color.gray;  // Tint it grey to be sure
+            baseImage.sprite = deadBaseSprite; // Turn the Hexagon Grey
+            baseImage.color = Color.gray;      // Tint it to look dead
         }
+        
+        // Note: We usually leave the connector broken (snapped) visually to show the damage is permanent.
 
-        // 2. Apply Permanent Stat Debuff
         if (statsScript != null)
         {
             statsScript.ApplyGeneticDebuff(affectedBase);
         }
 
-        // Hide button (too late to repair now)
         Destroy(gameObject);
     }
 }
