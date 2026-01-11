@@ -80,13 +80,4 @@ public class SurgeryManager : MonoBehaviour
         // 2. Close the Minigame after a delay
         Invoke("CloseMicroscope", 1.5f);
     }
-
-    void CloseMicroscope()
-    {
-        // Hide the panel
-        microscopePanel.SetActive(false);
-        
-        // Inform the Main DNA Manager that we won!
-        FindObjectOfType<DNA_skeleton>().RepairCurrentTarget(); // We need to write this function next!
-    }
 }

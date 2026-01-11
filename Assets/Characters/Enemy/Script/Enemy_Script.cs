@@ -52,6 +52,7 @@ public class Enemy_Script : MonoBehaviour
     public float enemyMeleeAttack = 1;
     public float enemyMeleeColliderRadius = 1.93f;
     public bool meleeAttack = false;
+    public bool Enemy_MeleeAttack;
 
     [Header("Enemy Range Stats")]
     public Transform enemyRangeAttackPos;
@@ -59,12 +60,14 @@ public class Enemy_Script : MonoBehaviour
     [SerializeField] private GameObject bullet;
     public float bulletForce = 1f;
     public bool rangeAttack = false;
+    public bool Enemy_RangedAttack;
 
     private Enemy_brain brain;
     private bool isFlipped = false;
     private HP_BarScript hp_BarScript;
     private float combatStartTime = 0f;
     public bool PlayerIsAttacking => playerAttackScript != null && playerAttackScript.isAttacking;
+    [SerializeField] private Animator animator;
 
     private void Awake()
     {
@@ -99,11 +102,15 @@ public class Enemy_Script : MonoBehaviour
             {
                 DealMeleeDamage(enemyMeleeAttack);
                 nextAttackTime = Time.time + 1f / attackRate;
+                Enemy_MeleeAttack = true;
+                animator.SetTrigger("Enemy_MeleeAttack");
             }
             if (rangeAttack)
             {
                 DealShootDamage();
                 nextAttackTime = Time.time + 1f / attackRate;
+                Enemy_RangedAttack = true;
+                animator.SetTrigger("Enemy_RangeAttack");
             }
         }
     }
